@@ -130,6 +130,34 @@ func main() {
 		})
 	})
 
+	// Memory messages list endpoint
+	mux.HandleFunc("GET /memory/messages/list", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Retrieving messages list")
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]any{
+			"status":   "ok",
+			"messages": messages,
+			"count":    len(messages),
+		})
+	})
+
+	// Memory messages tokens endpoint
+	mux.HandleFunc("GET /memory/messages/tokens", func(w http.ResponseWriter, r *http.Request) {
+		totalTokens := helpers.CalculateTokenCount(messages)
+
+		log.Printf("Calculated token count: %d", totalTokens)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]any{
+			"status": "ok",
+			"tokens": totalTokens,
+			"count":  len(messages),
+		})
+	})
+
 	// Health endpoint
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
