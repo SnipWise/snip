@@ -127,3 +127,4 @@ func Generate(ctx context.Context, llmURL string, embeddingsModel string) (ai.Em
 	return embedder, store, err
 
 }
+

@@ -2,8 +2,7 @@ package chatflow
 
 import (
 	"context"
-	"dmr-genkit-stream-completion/helpers"
-	"dmr-genkit-stream-completion/rag"
+	"dmr-genkit-stream-completion/embeddings"
 	"fmt"
 	"log"
 	"strings"
@@ -39,51 +38,21 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 		g,
 		"streaming-chat",
 		func(ctx context.Context, input *ChatRequest, callback core.StreamCallback[string]) (*ChatResponse, error) {
-			// -------------------------------------------------------------
+			
 			// [BEGIN] Similarity search
-			// -------------------------------------------------------------
-			// [IMPORTANT] Retrieve relevant context from the vector store
-			// -------------------------------------------------------------
-			// Use the custom retriever to find similar documents
-			// -------------------------------------------------------------
-
-			// Create a query document from the user question
-			queryDoc := ai.DocumentFromText(input.Message, nil)
-
-			similarityThreshold := helpers.StringToFloat(helpers.GetEnvOrDefault("SIMILARITY_THRESHOLD", "0.5"))
-			similarityMaxResults := helpers.StringToInt(helpers.GetEnvOrDefault("SIMILARITY_MAX_RESULTS", "3"))
-			// Create a retriever request with custom options
-			request := &ai.RetrieverRequest{
-				Query: queryDoc,
-				Options: rag.MemoryVectorRetrieverOptions{
-					Limit:      similarityThreshold,  // Lower similarity threshold to get more results
-					MaxResults: similarityMaxResults, // Return top N results
-				},
-			}
-
-			// Use the memory vector retriever to find similar documents
-			retrieveResponse, err := config.MemoryRetriever.Retrieve(ctx, request)
+			// Retrieve relevant context from the vector store
+			similarDocuments, err := embeddings.RetrieveSimilarDocuments(ctx, input.Message, config.MemoryRetriever)
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			similarDocuments := ""
-
-			fmt.Printf("\nFound %d similar documents:\n", len(retrieveResponse.Documents))
-			for i, doc := range retrieveResponse.Documents {
-				similarity := doc.Metadata["cosine_similarity"]
-				id := doc.Metadata["id"]
-				fmt.Printf("%d. ID: %s, Similarity: %.4f\n", i+1, id, similarity)
-				fmt.Printf("   Content: %s\n\n", doc.Content[0].Text)
-				similarDocuments += doc.Content[0].Text
-			}
 			if similarDocuments != "" {
+				// Add Similarities to Messages
 				*config.Messages = append(*config.Messages, ai.NewSystemTextMessage("Relevant context:\n"+similarDocuments))
 			}
-			// -------------------------------------------------------------
 			// [END] Similarity search
-			// -------------------------------------------------------------
 
+			// Update Conversational Memory
 			*config.Messages = append(*config.Messages, ai.NewUserTextMessage(input.Message))
 
 			// Debug: Print conversation state
@@ -108,7 +77,8 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				delete(*config.ActiveCompletions, completionID)
 				config.CompletionsMutex.Unlock()
 			}()
-
+			
+			// [BEGIN] Stream Completion
 			fullResponse, err := genkit.Generate(completionCtx, g,
 				ai.WithModelName("openai/"+config.SnipModel),
 
@@ -129,10 +99,12 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 					return nil
 				}),
 			)
+			// [END] Stream Completion
 			if err != nil {
 				return nil, err
 			}
 
+			// Update Conversational Memory
 			// Add assistant response to conversation history
 			*config.Messages = append(*config.Messages, ai.NewTextMessage("assistant", fullResponse.Text()))
 

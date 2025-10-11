@@ -98,6 +98,30 @@
             "border": "1px solid #ffffff",
             "borderRadius": "3px",
             "isWholeLine": false
-        },                                                              
+        },      
+        {
+            "text": "Stream Completion",
+            "color": "#000000",
+            "backgroundColor": "#4CE1D9",
+            "border": "1px solid #ffffff",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },  
+        {
+            "text": "Update Conversational Memory",
+            "color": "#000000",
+            "backgroundColor": "#CDA8DE",
+            "border": "1px solid #CDA8DE",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },     
+        {
+            "text": "Add Similarities to Messages",
+            "color": "#000000",
+            "backgroundColor": "#BECEEE",
+            "border": "1px solid #BECEEE",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },                                                                             
     ]
 }
