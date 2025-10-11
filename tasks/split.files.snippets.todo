@@ -1,2 +1,0 @@
-verifier si le fait de faire plein de petits fichiers json va fonctionner
-comme ca au 1er chargement on calcule tout et ensuite on ne calcule que si le fichier json n'existe pas
