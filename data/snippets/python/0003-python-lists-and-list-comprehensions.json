@@ -1,5 +1,5 @@
 {
-  "id": "9b4910b7-cbba-402b-817c-d29be8345147",
+  "id": "5e7582a8-ba26-44d5-be69-fe3a9c7b2374",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Lists And List Comprehensions\",\n  \"tags\": [\n    \"python\",\n    \"io\",\n    \"comprehensions\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Lists and List Comprehensions\nWorking with lists and comprehensions\n```python\nnumbers = [1, 2, 3, 4, 5]\nnames = [\"Alice\", \"Bob\", \"Charlie\"]\n\n# List operations\nnumbers.append(6)\nnumbers.insert(0, 0)\nfirst = numbers.pop(0)\n\n# List comprehensions\nsquares = [x**2 for x in numbers]\nevens = [x for x in numbers if x % 2 == 0]\npairs = [(x, y) for x in range(3) for y in range(3)]\n\nprint(f\"Squares: {squares}\")\nprint(f\"Evens: {evens}\")\n```",
   "embedding": [
     0.019783385,

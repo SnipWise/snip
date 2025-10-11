@@ -1,5 +1,5 @@
 {
-  "id": "13369402-cd99-4b05-bde8-a31337c230a2",
+  "id": "d68b34a8-d2e7-4577-8767-b3e89e171295",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Data Processing With Pandas\",\n  \"tags\": [\n    \"python\",\n    \"data-processing\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Data Processing with Pandas\nBasic data manipulation with pandas\n```python\nimport pandas as pd\n\n# Create sample data\ndata = {\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 28],\n    'salary': [50000, 60000, 70000, 55000]\n}\n\ndf = pd.DataFrame(data)\nprint(df)\n\n# Filtering\nyoung = df[df['age'] \u003c 30]\nhigh_earners = df[df['salary'] \u003e 55000]\n\n# Basic stats\navg_age = df['age'].mean()\ntotal_salary = df['salary'].sum()\n\nprint(f\"Average age: {avg_age}\")\nprint(f\"Total salary: {total_salary}\")\n\n# Add new column\ndf['salary_k'] = df['salary'] / 1000\ndf['category'] = df['age'].apply(lambda x: 'Young' if x \u003c 30 else 'Senior')\n\n# Sort and display\ndf_sorted = df.sort_values('age')\nprint(f\"\\nSorted by age:\\n{df_sorted[['name', 'age', 'category']]}\")\n```",
   "embedding": [
     -0.00083803135,

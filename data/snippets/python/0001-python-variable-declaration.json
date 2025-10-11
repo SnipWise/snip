@@ -1,5 +1,5 @@
 {
-  "id": "8fa75c5f-13a7-474c-9594-11dc5aadbdab",
+  "id": "a8b28d91-a0fe-47f0-81b6-c07cedb54309",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Variable Declaration\",\n  \"tags\": [\n    \"python\",\n    \"variables\",\n    \"io\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Variable Declaration\nDifferent ways to declare and initialize variables\n```python\nname = \"John\"           # String\nage = 30               # Integer\nheight = 5.9           # Float\nis_active = True       # Boolean\nfruits = [\"apple\", \"banana\"]  # List\nx, y = 10, 20          # Multiple assignment\n\nprint(f\"Name: {name}, Age: {age}, Height: {height}\")\n```",
   "embedding": [
     0.012405152,

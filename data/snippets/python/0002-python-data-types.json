@@ -1,5 +1,5 @@
 {
-  "id": "92d921fa-cf52-457e-8ff3-bdeebcdbfdbd",
+  "id": "203e5966-0ff5-408a-af93-515b321967a4",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Data Types\",\n  \"tags\": [\n    \"python\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Data Types\nWorking with basic data types\n```python\n# Numbers\ninteger = 42\nfloat_num = 3.14\ncomplex_num = 1 + 2j\n\n# Strings\nstring = \"Python\"\nmultiline = \"\"\"This is a\nmultiline string\"\"\"\n\n# Collections\nlist_example = [1, 2, 3, 4]\ntuple_example = (1, 2, 3)\nset_example = {1, 2, 3}\ndict_example = {\"name\": \"Alice\", \"age\": 30}\n\nprint(f\"Types: {type(integer)}, {type(string)}, {type(list_example)}\")\n```",
   "embedding": [
     0.00063930737,

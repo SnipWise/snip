@@ -1,5 +1,5 @@
 {
-  "id": "0879bf50-85d4-445d-957e-e1ba93685fc2",
+  "id": "84427c13-5f17-4bce-b1f9-b2f1f9825b0f",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Dictionaries\",\n  \"tags\": [\n    \"python\",\n    \"io\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Dictionaries\nCreating and manipulating dictionaries\n```python\nperson = {\"name\": \"Alice\", \"age\": 30, \"city\": \"New York\"}\n\n# Dictionary operations\nperson[\"email\"] = \"alice@example.com\"\nage = person.get(\"age\", 0)\nkeys = list(person.keys())\nvalues = list(person.values())\n\n# Dictionary comprehension\nsquares_dict = {x: x**2 for x in range(5)}\n\n# Iterating\nfor key, value in person.items():\n    print(f\"{key}: {value}\")\n```",
   "embedding": [
     0.016328664,

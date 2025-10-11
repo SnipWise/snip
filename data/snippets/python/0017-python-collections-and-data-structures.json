@@ -1,5 +1,5 @@
 {
-  "id": "456b0f3d-2e50-4c3d-8cf5-af34fd01823d",
+  "id": "f0a7f59c-0d4e-4fa9-8f20-0a1cebeeecf7",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Collections And Data Structures\",\n  \"tags\": [\n    \"python\",\n    \"structs\",\n    \"io\",\n    \"collections\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Collections and Data Structures\nAdvanced data structures\n```python\nfrom collections import defaultdict, Counter, deque, namedtuple\nimport heapq\n\n# defaultdict\ndd = defaultdict(list)\ndd['fruits'].append('apple')\ndd['fruits'].append('banana')\nprint(f\"Default dict: {dict(dd)}\")\n\n# Counter\ntext = \"hello world\"\nchar_count = Counter(text)\nprint(f\"Character count: {char_count}\")\nprint(f\"Most common: {char_count.most_common(3)}\")\n\n# deque (double-ended queue)\nqueue = deque([1, 2, 3])\nqueue.appendleft(0)\nqueue.append(4)\nleft = queue.popleft()\nright = queue.pop()\nprint(f\"Queue: {queue}, popped: {left}, {right}\")\n\n# namedtuple\nPerson = namedtuple('Person', ['name', 'age', 'city'])\nperson = Person('Alice', 30, 'New York')\nprint(f\"Person: {person.name}, {person.age}\")\n\n# heapq (priority queue)\nheap = [3, 1, 4, 1, 5, 9, 2, 6]\nheapq.heapify(heap)\nsmallest = heapq.heappop(heap)\nheapq.heappush(heap, 0)\nprint(f\"Smallest: {smallest}, heap: {heap}\")\n```",
   "embedding": [
     0.0022164797,

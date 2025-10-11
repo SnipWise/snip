@@ -1,5 +1,5 @@
 {
-  "id": "0d938fc5-9340-41f2-8e37-96e9c1bbae7a",
+  "id": "5536c8dd-f0a1-4593-b272-2007426976c8",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Environment Variables\",\n  \"tags\": [\n    \"python\",\n    \"variables\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Environment Variables\nWorking with environment variables and configuration\n```python\nimport os\n\n# Basic environment variable operations\ndebug_mode = os.getenv('DEBUG', 'False').lower() == 'true'\ndatabase_url = os.getenv('DATABASE_URL', 'sqlite:///app.db')\nport = int(os.getenv('PORT', 5000))\n\n# Required environment variable (raises KeyError if not set)\ntry:\n    api_key = os.environ['API_KEY']\nexcept KeyError:\n    api_key = \"default-api-key\"\n\n# Set environment variable\nos.environ['TEMP_VAR'] = 'temporary_value'\n\n# Check if variable exists\nif 'HOME' in os.environ:\n    print(f\"Home: {os.environ['HOME']}\")\n\n# Configuration class\nclass Config:\n    DEBUG = debug_mode\n    DATABASE_URL = database_url\n    PORT = port\n    API_KEY = api_key\n\nprint(f\"Debug mode: {Config.DEBUG}\")\nprint(f\"Port: {Config.PORT}\")\nprint(f\"Total env vars: {len(os.environ)}\")\n```",
   "embedding": [
     0.009387556,

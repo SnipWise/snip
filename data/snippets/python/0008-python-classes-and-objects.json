@@ -1,5 +1,5 @@
 {
-  "id": "f9a24850-f3ed-4075-b9c1-24bda9393fbe",
+  "id": "73bc990e-d50c-4769-901c-1fcde7617737",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Classes And Objects\",\n  \"tags\": [\n    \"python\",\n    \"classes\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Classes and Objects\nObject-oriented programming\n```python\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n        self._id = id(self)  # Private-ish attribute\n\n    def greet(self):\n        return f\"Hello, I'm {self.name}\"\n\n    def __str__(self):\n        return f\"Person(name={self.name}, age={self.age})\"\n\n    @classmethod\n    def from_string(cls, person_str):\n        name, age = person_str.split('-')\n        return cls(name, int(age))\n\n    @staticmethod\n    def is_adult(age):\n        return age \u003e= 18\n\n# Usage\nperson = Person(\"Alice\", 30)\nprint(person.greet())\nprint(f\"Is adult: {Person.is_adult(person.age)}\")\n\nperson2 = Person.from_string(\"Bob-25\")\nprint(person2)\n```",
   "embedding": [
     0.00016487237,

@@ -1,5 +1,5 @@
 {
-  "id": "3f81b3ea-0113-4f2a-a96a-6e21f1020e90",
+  "id": "27af7a41-5690-4106-9f12-abe2ceed2bf6",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Loops\",\n  \"tags\": [\n    \"python\",\n    \"loops\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Loops\nDifferent types of loops\n```python\n# For loop with range\nfor i in range(5):\n    print(f\"Number: {i}\")\n\n# For loop with list\nfruits = [\"apple\", \"banana\", \"cherry\"]\nfor fruit in fruits:\n    print(f\"Fruit: {fruit}\")\n\n# For loop with enumerate\nfor index, fruit in enumerate(fruits):\n    print(f\"{index}: {fruit}\")\n\n# While loop\ncount = 0\nwhile count \u003c 3:\n    print(f\"Count: {count}\")\n    count += 1\n\n# Loop with else\nfor i in range(3):\n    print(i)\nelse:\n    print(\"Loop completed\")\n```",
   "embedding": [
     0.0043803216,

@@ -1,5 +1,5 @@
 {
-  "id": "002e65a5-f562-40a7-b724-ad0036b7ea81",
+  "id": "02f31518-2810-45a3-9598-c19f8051f909",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python String Manipulation\",\n  \"tags\": [\n    \"python\",\n    \"io\",\n    \"strings\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## String Manipulation\nCommon string operations\n```python\ntext = \"  Hello, World!  \"\nname = \"Alice\"\nage = 30\n\n# Basic operations\nprint(f\"Original: '{text}'\")\nprint(f\"Trimmed: '{text.strip()}'\")\nprint(f\"Upper: {text.upper()}\")\nprint(f\"Lower: {text.lower()}\")\nprint(f\"Replace: {text.replace('World', 'Python')}\")\n\n# String formatting\nformatted1 = \"Name: {}, Age: {}\".format(name, age)\nformatted2 = f\"Name: {name}, Age: {age}\"\nformatted3 = \"Name: %(name)s, Age: %(age)d\" % {\"name\": name, \"age\": age}\n\nprint(f\"Formatted: {formatted2}\")\n\n# String methods\nsentence = \"python is awesome\"\nwords = sentence.split()\ncapitalized = sentence.title()\nstarts_with = sentence.startswith(\"python\")\n\nprint(f\"Words: {words}\")\nprint(f\"Capitalized: {capitalized}\")\nprint(f\"Starts with 'python': {starts_with}\")\n\n# Join strings\njoined = \" | \".join(words)\nprint(f\"Joined: {joined}\")\n```",
   "embedding": [
     0.024240786,

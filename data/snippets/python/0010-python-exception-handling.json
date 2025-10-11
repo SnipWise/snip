@@ -1,5 +1,5 @@
 {
-  "id": "7ece8879-821e-4de0-b4d1-6d44cd9962f3",
+  "id": "2f119af6-7577-4054-9b6b-83d0b8a41f8d",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Exception Handling\",\n  \"tags\": [\n    \"python\",\n    \"error-handling\",\n    \"io\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Exception Handling\nTry-catch blocks and custom exceptions\n```python\nclass CustomError(Exception):\n    def __init__(self, message):\n        self.message = message\n        super().__init__(self.message)\n\ndef divide_numbers(a, b):\n    if b == 0:\n        raise CustomError(\"Cannot divide by zero\")\n    return a / b\n\ndef safe_conversion(value):\n    try:\n        result = int(value)\n        return result\n    except ValueError:\n        print(f\"Cannot convert '{value}' to integer\")\n        return None\n    except Exception as e:\n        print(f\"Unexpected error: {e}\")\n        return None\n    finally:\n        print(\"Conversion attempt completed\")\n\n# Usage\ntry:\n    result = divide_numbers(10, 2)\n    print(f\"Result: {result}\")\n    \n    bad_result = divide_numbers(10, 0)\nexcept CustomError as e:\n    print(f\"Custom error: {e.message}\")\n\nnumber = safe_conversion(\"123\")\ninvalid = safe_conversion(\"abc\")\n```",
   "embedding": [
     -0.019107012,

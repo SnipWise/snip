@@ -1,5 +1,5 @@
 {
-  "id": "bd410df3-89bf-4713-b587-f819513a0e0d",
+  "id": "d712734a-c64b-42bc-ae2a-d50bdb96a936",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Http Requests\",\n  \"tags\": [\n    \"python\",\n    \"http\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## HTTP Requests\nMaking HTTP requests with requests library\n```python\nimport requests\nimport json\n\n# GET request\nresponse = requests.get(\"https://httpbin.org/json\")\nprint(f\"Status: {response.status_code}\")\nprint(f\"JSON: {response.json()}\")\n\n# POST request with JSON\ndata = {\"name\": \"Alice\", \"age\": 30}\nheaders = {\"Content-Type\": \"application/json\"}\n\nresponse = requests.post(\n    \"https://httpbin.org/post\",\n    json=data,\n    headers=headers\n)\n\nif response.status_code == 200:\n    result = response.json()\n    print(f\"POST response: {result['json']}\")\n\n# GET with parameters\nparams = {\"page\": 1, \"limit\": 10}\nresponse = requests.get(\"https://httpbin.org/get\", params=params)\nprint(f\"URL with params: {response.url}\")\n\n# Error handling\ntry:\n    response = requests.get(\"https://httpbin.org/status/404\", timeout=5)\n    response.raise_for_status()\nexcept requests.exceptions.RequestException as e:\n    print(f\"Request error: {e}\")\n```",
   "embedding": [
     0.008825178,

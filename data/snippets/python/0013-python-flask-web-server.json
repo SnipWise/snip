@@ -1,5 +1,5 @@
 {
-  "id": "c7f378bb-ec9a-4a9b-9d81-4336bf57e619",
+  "id": "f8d46a15-d143-4b61-a7d2-427fb7a709c8",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Flask Web Server\",\n  \"tags\": [\n    \"python\",\n    \"networking\",\n    \"web\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Flask Web Server\nCreating a simple web server with Flask\n```python\nfrom flask import Flask, jsonify, request\n\napp = Flask(__name__)\n\nusers = [\"Alice\", \"Bob\", \"Charlie\"]\n\n@app.route(\"/\")\ndef home():\n    return \"Hello, Flask!\"\n\n@app.route(\"/users\", methods=[\"GET\"])\ndef get_users():\n    return jsonify(users)\n\n@app.route(\"/users\", methods=[\"POST\"])\ndef create_user():\n    data = request.json\n    name = data.get(\"name\")\n    if name:\n        users.append(name)\n        return jsonify({\"message\": f\"User {name} added\"}), 201\n    return jsonify({\"error\": \"Name required\"}), 400\n\nif __name__ == \"__main__\":\n    app.run(debug=True, port=5000)\n```",
   "embedding": [
     0.021599999,

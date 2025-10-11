@@ -1,5 +1,5 @@
 {
-  "id": "c854e1d2-bdc3-4551-bd6c-a5f3336e5ba6",
+  "id": "414022c1-c839-4004-838b-8411cb183fa7",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Functions\",\n  \"tags\": [\n    \"python\",\n    \"functions\",\n    \"io\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Functions\nFunction definition and parameters\n```python\ndef greet(name, greeting=\"Hello\"):\n    return f\"{greeting}, {name}!\"\n\ndef add_numbers(*args):\n    return sum(args)\n\ndef create_profile(**kwargs):\n    return {k: v for k, v in kwargs.items()}\n\n# Lambda functions\nsquare = lambda x: x**2\nadd = lambda x, y: x + y\n\n# Function calls\nmessage = greet(\"Alice\")\ntotal = add_numbers(1, 2, 3, 4, 5)\nprofile = create_profile(name=\"Bob\", age=25, city=\"Boston\")\n\nprint(f\"Message: {message}\")\nprint(f\"Total: {total}\")\nprint(f\"Square of 5: {square(5)}\")\n```",
   "embedding": [
     0.028352305,

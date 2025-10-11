@@ -1,5 +1,5 @@
 {
-  "id": "bc2a2b1d-db98-4344-a395-c97469b0388e",
+  "id": "bb4e35ec-ed25-4ec2-8f01-a6e57b5b22c4",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Inheritance\",\n  \"tags\": [\n    \"python\",\n    \"oop\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Inheritance\nClass inheritance and method overriding\n```python\nclass Animal:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        pass\n\n    def info(self):\n        return f\"This is {self.name}\"\n\nclass Dog(Animal):\n    def __init__(self, name, breed):\n        super().__init__(name)\n        self.breed = breed\n\n    def speak(self):\n        return \"Woof!\"\n\n    def info(self):\n        return f\"{super().info()}, a {self.breed} dog\"\n\nclass Cat(Animal):\n    def speak(self):\n        return \"Meow!\"\n\n# Usage\ndog = Dog(\"Buddy\", \"Golden Retriever\")\ncat = Cat(\"Whiskers\")\n\nprint(f\"{dog.name} says: {dog.speak()}\")\nprint(dog.info())\nprint(f\"{cat.name} says: {cat.speak()}\")\n```",
   "embedding": [
     0.016521877,

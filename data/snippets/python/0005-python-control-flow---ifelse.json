@@ -1,5 +1,5 @@
 {
-  "id": "c26576f2-c78c-422a-a146-8fcc78c171f6",
+  "id": "a0b7b587-c14c-4aad-a6ba-cfc4adfb42c2",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Python Control Flow   Ifelse\",\n  \"tags\": [\n    \"python\",\n    \"control-flow\"\n  ],\n  \"language\": \"python\"\n}\n--\u003e\n\n## Control Flow - If/Else\nConditional statements\n```python\nage = 25\nscore = 85\n\nif age \u003e= 18:\n    print(\"Adult\")\nelif age \u003e= 13:\n    print(\"Teenager\")\nelse:\n    print(\"Child\")\n\n# Ternary operator\nstatus = \"adult\" if age \u003e= 18 else \"minor\"\n\n# Multiple conditions\nif 80 \u003c= score \u003c= 100:\n    grade = \"A\"\nelif 70 \u003c= score \u003c 80:\n    grade = \"B\"\nelse:\n    grade = \"C\"\n\nprint(f\"Status: {status}, Grade: {grade}\")\n```",
   "embedding": [
     0.012637961,
