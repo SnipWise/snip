@@ -42,6 +42,8 @@ var (
 func main() {
 	ctx := context.Background()
 
+	contextSizeLimit := helpers.StringToInt(helpers.GetEnvOrDefault("CONTEXT_SIZE_LIMIT", "3000"))
+
 	llmURL := helpers.GetEnvOrDefault("MODEL_RUNNER_BASE_URL", "http://localhost:12434/engines/llama.cpp/v1")
 	snipModel := helpers.GetEnvOrDefault("SNIP_MODEL", "hf.co/menlo/jan-nano-gguf:q4_k_m")
 	embeddingsModel := helpers.GetEnvOrDefault("EMBEDDING_MODEL", "ai/mxbai-embed-large:latest")
@@ -81,7 +83,9 @@ func main() {
 		Messages:          &messages,
 		ActiveCompletions: &activeCompletions,
 		CompletionsMutex:  &completionsMutex,
+		ContextSizeLimit:  contextSizeLimit,
 	})
+
 	mux := http.NewServeMux()
 	if streamingChatFlow != nil {
 		mux.HandleFunc("POST /completion", genkit.Handler(streamingChatFlow))
@@ -155,6 +159,20 @@ func main() {
 			"status": "ok",
 			"tokens": totalTokens,
 			"count":  len(messages),
+			"limit":  contextSizeLimit,
+		})
+	})
+
+	// Models endpoint
+	mux.HandleFunc("GET /models", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Retrieving models information")
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]any{
+			"status":           "ok",
+			"chat_model":       snipModel,
+			"embeddings_model": embeddingsModel,
 		})
 	})
 

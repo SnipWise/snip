@@ -27,6 +27,8 @@ services:
       SIMILARITY_THRESHOLD: 0.6
       SIMILARITY_MAX_RESULTS: 3
 
+      CONTEXT_SIZE_LIMIT: 8192
+
     volumes:
       - ./data/snippets:/app/snippets
       #- ./store:/app/store      
@@ -42,6 +44,7 @@ services:
 models:
   snip-model:
     model: hf.co/menlo/jan-nano-gguf:q4_k_m
+    context_size: 8192
     #model: hf.co/menlo/lucy-gguf:q4_k_m
     # context_size: 4096
     runtime_flags:

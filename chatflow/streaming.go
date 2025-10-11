@@ -30,6 +30,7 @@ type StreamingChatFlowConfig struct {
 	Messages          *[]*ai.Message
 	ActiveCompletions *map[string]context.CancelFunc
 	CompletionsMutex  *sync.RWMutex
+	ContextSizeLimit  int
 }
 
 // DefineStreamingChatFlow creates and returns a streaming chat flow
