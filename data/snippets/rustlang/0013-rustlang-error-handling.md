@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Error Handling",
+  "tags": [
+    "rust",
+    "error-handling"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Error Handling
 Proper error handling with ? operator
 ```rust

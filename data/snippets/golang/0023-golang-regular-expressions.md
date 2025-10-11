@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Regular Expressions",
+  "tags": [
+    "go",
+    "io",
+    "regex"
+  ],
+  "language": "go"
+}
+-->
+
 ## Regular Expressions
 Pattern matching with regex
 ```go

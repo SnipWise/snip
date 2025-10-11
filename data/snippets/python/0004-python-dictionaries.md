@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Dictionaries",
+  "tags": [
+    "python",
+    "io"
+  ],
+  "language": "python"
+}
+-->
+
 ## Dictionaries
 Creating and manipulating dictionaries
 ```python

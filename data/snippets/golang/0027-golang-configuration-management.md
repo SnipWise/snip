@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Configuration Management",
+  "tags": [
+    "go",
+    "io",
+    "configuration"
+  ],
+  "language": "go"
+}
+-->
+
 ## Configuration Management
 Managing application configuration
 ```go

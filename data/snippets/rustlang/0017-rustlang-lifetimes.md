@@ -1,3 +1,16 @@
+<!-- METADATA
+{
+  "title": "Rustlang Lifetimes",
+  "tags": [
+    "rust",
+    "control-flow",
+    "time",
+    "lifetimes"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Lifetimes
 Working with lifetime annotations
 ```rust

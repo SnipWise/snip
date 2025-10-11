@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python Regular Expressions",
+  "tags": [
+    "python",
+    "io",
+    "regex"
+  ],
+  "language": "python"
+}
+-->
+
 ## Regular Expressions
 Pattern matching with re module
 ```python

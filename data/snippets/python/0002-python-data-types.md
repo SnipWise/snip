@@ -1,3 +1,13 @@
+<!-- METADATA
+{
+  "title": "Python Data Types",
+  "tags": [
+    "python"
+  ],
+  "language": "python"
+}
+-->
+
 ## Data Types
 Working with basic data types
 ```python

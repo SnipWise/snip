@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Command Line Arguments",
+  "tags": [
+    "python",
+    "cli"
+  ],
+  "language": "python"
+}
+-->
+
 ## Command Line Arguments
 Parsing command line arguments with argparse
 ```python

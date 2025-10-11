@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python Exception Handling",
+  "tags": [
+    "python",
+    "error-handling",
+    "io"
+  ],
+  "language": "python"
+}
+-->
+
 ## Exception Handling
 Try-catch blocks and custom exceptions
 ```python

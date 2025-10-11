@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python File Io",
+  "tags": [
+    "python",
+    "file-io",
+    "io"
+  ],
+  "language": "python"
+}
+-->
+
 ## File I/O
 Reading and writing files
 ```python

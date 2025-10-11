@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Logging",
+  "tags": [
+    "python",
+    "logging"
+  ],
+  "language": "python"
+}
+-->
+
 ## Logging
 Structured logging with logging module
 ```python

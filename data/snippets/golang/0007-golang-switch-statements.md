@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Switch Statements",
+  "tags": [
+    "go",
+    "control-flow"
+  ],
+  "language": "go"
+}
+-->
+
 ## Switch Statements
 Switch case statements
 ```go

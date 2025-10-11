@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Control Flow   Ifelse",
+  "tags": [
+    "rust",
+    "control-flow"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Control Flow - If/Else
 Conditional statements
 ```rust

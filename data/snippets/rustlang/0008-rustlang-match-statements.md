@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Match Statements",
+  "tags": [
+    "rust",
+    "control-flow"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Match Statements
 Pattern matching with match
 ```rust

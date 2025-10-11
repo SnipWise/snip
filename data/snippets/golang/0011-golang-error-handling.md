@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Error Handling",
+  "tags": [
+    "go",
+    "error-handling"
+  ],
+  "language": "go"
+}
+-->
+
 ## Error Handling
 Proper error handling patterns
 ```go

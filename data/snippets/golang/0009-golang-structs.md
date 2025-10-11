@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Structs",
+  "tags": [
+    "go",
+    "structs"
+  ],
+  "language": "go"
+}
+-->
+
 ## Structs
 Defining and using structs
 ```go

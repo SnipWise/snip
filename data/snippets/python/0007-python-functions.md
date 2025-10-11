@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python Functions",
+  "tags": [
+    "python",
+    "functions",
+    "io"
+  ],
+  "language": "python"
+}
+-->
+
 ## Functions
 Function definition and parameters
 ```python

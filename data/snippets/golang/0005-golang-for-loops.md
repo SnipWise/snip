@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang For Loops",
+  "tags": [
+    "go",
+    "loops"
+  ],
+  "language": "go"
+}
+-->
+
 ## For Loops
 Different types of for loops
 ```go

@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Hello World",
+  "tags": [
+    "python",
+    "basics"
+  ],
+  "language": "python"
+}
+-->
+
 ## Hello World
 Basic program structure and main function
 ```python

@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Http Client",
+  "tags": [
+    "go",
+    "http",
+    "networking"
+  ],
+  "language": "go"
+}
+-->
+
 ## HTTP Client
 Making HTTP requests
 ```go

@@ -1,3 +1,13 @@
+<!-- METADATA
+{
+  "title": "Who Is Keegorg",
+  "tags": [
+    "text"
+  ],
+  "language": "text"
+}
+-->
+
 # k33g (Philippe Charrière)
 
 Philippe Charrière, known online as **k33g**, is a Senior Solution Architect at Docker, Inc. He specializes in containerization, WebAssembly (Wasm), and cloud-native technologies. A GitLab Certified Security Specialist and author of the "Wasm Cooking with GoLang" e-book, Philippe is passionate about emerging technologies and developer tools.

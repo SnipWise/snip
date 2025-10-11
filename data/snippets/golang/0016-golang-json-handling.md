@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Json Handling",
+  "tags": [
+    "go",
+    "json"
+  ],
+  "language": "go"
+}
+-->
+
 ## JSON Handling
 Marshal and unmarshal JSON data
 ```go

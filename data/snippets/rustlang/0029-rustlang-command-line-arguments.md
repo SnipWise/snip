@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Command Line Arguments",
+  "tags": [
+    "rust",
+    "cli"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Command Line Arguments
 Parsing command line arguments with clap
 ```rust

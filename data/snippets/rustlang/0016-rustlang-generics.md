@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Generics",
+  "tags": [
+    "rust",
+    "generics"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Generics
 Using generic types and functions
 ```rust

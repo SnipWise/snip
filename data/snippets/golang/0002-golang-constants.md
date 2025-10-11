@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Constants",
+  "tags": [
+    "go",
+    "constants"
+  ],
+  "language": "go"
+}
+-->
+
 ## Constants
 Declaring and using constants
 ```go

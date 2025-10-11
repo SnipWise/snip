@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang If Else Statements",
+  "tags": [
+    "go",
+    "control-flow"
+  ],
+  "language": "go"
+}
+-->
+
 ## If-Else Statements
 Conditional statements
 ```go

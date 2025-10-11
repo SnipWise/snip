@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python Flask Web Server",
+  "tags": [
+    "python",
+    "networking",
+    "web"
+  ],
+  "language": "python"
+}
+-->
+
 ## Flask Web Server
 Creating a simple web server with Flask
 ```python

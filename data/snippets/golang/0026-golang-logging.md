@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Logging",
+  "tags": [
+    "go",
+    "logging"
+  ],
+  "language": "go"
+}
+-->
+
 ## Logging
 Different logging approaches
 ```go

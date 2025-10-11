@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Constants And Static",
+  "tags": [
+    "rust",
+    "constants"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Constants and Static
 Declaring constants and static variables
 ```rust

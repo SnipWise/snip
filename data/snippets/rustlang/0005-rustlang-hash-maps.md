@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Hash Maps",
+  "tags": [
+    "rust",
+    "maps"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Hash Maps
 Creating and manipulating hash maps
 ```rust

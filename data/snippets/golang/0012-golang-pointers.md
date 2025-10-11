@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Pointers",
+  "tags": [
+    "go",
+    "pointers"
+  ],
+  "language": "go"
+}
+-->
+
 ## Pointers
 Working with pointers
 ```go

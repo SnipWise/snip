@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python Variable Declaration",
+  "tags": [
+    "python",
+    "variables",
+    "io"
+  ],
+  "language": "python"
+}
+-->
+
 ## Variable Declaration
 Different ways to declare and initialize variables
 ```python

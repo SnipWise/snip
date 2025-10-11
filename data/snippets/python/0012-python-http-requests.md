@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Http Requests",
+  "tags": [
+    "python",
+    "http"
+  ],
+  "language": "python"
+}
+-->
+
 ## HTTP Requests
 Making HTTP requests with requests library
 ```python

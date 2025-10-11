@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Testing",
+  "tags": [
+    "rust",
+    "testing"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Testing
 Unit tests and integration tests
 ```rust

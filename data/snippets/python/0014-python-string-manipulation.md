@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python String Manipulation",
+  "tags": [
+    "python",
+    "io",
+    "strings"
+  ],
+  "language": "python"
+}
+-->
+
 ## String Manipulation
 Common string operations
 ```python

@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Functions",
+  "tags": [
+    "go",
+    "functions",
+    "io"
+  ],
+  "language": "go"
+}
+-->
+
 ## Functions
 Function declaration and return values
 ```go

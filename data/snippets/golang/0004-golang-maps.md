@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Maps",
+  "tags": [
+    "go",
+    "maps"
+  ],
+  "language": "go"
+}
+-->
+
 ## Maps
 Creating and manipulating maps
 ```go

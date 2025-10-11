@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Http Server",
+  "tags": [
+    "go",
+    "http",
+    "networking"
+  ],
+  "language": "go"
+}
+-->
+
 ## HTTP Server
 Creating a simple HTTP server
 ```go

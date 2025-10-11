@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Structs",
+  "tags": [
+    "rust",
+    "structs"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Structs
 Defining and using structs
 ```rust

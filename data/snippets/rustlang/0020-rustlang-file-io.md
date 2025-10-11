@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang File Io",
+  "tags": [
+    "rust",
+    "file-io",
+    "io"
+  ],
+  "language": "rust"
+}
+-->
+
 ## File I/O
 Reading and writing files
 ```rust

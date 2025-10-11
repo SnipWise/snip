@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Arrays And Vectors",
+  "tags": [
+    "rust",
+    "arrays"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Arrays and Vectors
 Working with arrays and vectors
 ```rust

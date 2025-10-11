@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Json Handling",
+  "tags": [
+    "rust",
+    "json"
+  ],
+  "language": "rust"
+}
+-->
+
 ## JSON Handling
 Serialize and deserialize JSON with serde
 ```rust
