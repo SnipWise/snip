@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Date And Time",
+  "tags": [
+    "rust",
+    "time"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Date and Time
 Working with chrono for date/time operations
 ```rust

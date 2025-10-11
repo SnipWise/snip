@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Ownership And Borrowing",
+  "tags": [
+    "rust",
+    "memory-management"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Ownership and Borrowing
 Understanding ownership rules
 ```rust

@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Context Managers",
+  "tags": [
+    "python",
+    "context"
+  ],
+  "language": "python"
+}
+-->
+
 ## Context Managers
 Using and creating context managers
 ```python

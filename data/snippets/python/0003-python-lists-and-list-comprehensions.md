@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python Lists And List Comprehensions",
+  "tags": [
+    "python",
+    "io",
+    "comprehensions"
+  ],
+  "language": "python"
+}
+-->
+
 ## Lists and List Comprehensions
 Working with lists and comprehensions
 ```python

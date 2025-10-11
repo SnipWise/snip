@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Classes And Objects",
+  "tags": [
+    "python",
+    "classes"
+  ],
+  "language": "python"
+}
+-->
+
 ## Classes and Objects
 Object-oriented programming
 ```python

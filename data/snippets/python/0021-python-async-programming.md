@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Async Programming",
+  "tags": [
+    "python",
+    "async"
+  ],
+  "language": "python"
+}
+-->
+
 ## Async Programming
 Asynchronous programming with asyncio
 ```python

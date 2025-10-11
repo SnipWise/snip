@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Environment Variables",
+  "tags": [
+    "python",
+    "variables"
+  ],
+  "language": "python"
+}
+-->
+
 ## Environment Variables
 Working with environment variables and configuration
 ```python

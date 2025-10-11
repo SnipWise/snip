@@ -1,3 +1,16 @@
+<!-- METADATA
+{
+  "title": "Python Collections And Data Structures",
+  "tags": [
+    "python",
+    "structs",
+    "io",
+    "collections"
+  ],
+  "language": "python"
+}
+-->
+
 ## Collections and Data Structures
 Advanced data structures
 ```python

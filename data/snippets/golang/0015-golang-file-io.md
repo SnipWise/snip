@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang File Io",
+  "tags": [
+    "go",
+    "file-io",
+    "io"
+  ],
+  "language": "go"
+}
+-->
+
 ## File I/O
 Reading and writing files
 ```go

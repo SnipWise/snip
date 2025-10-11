@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Traits",
+  "tags": [
+    "rust",
+    "traits"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Traits
 Defining and implementing traits
 ```rust

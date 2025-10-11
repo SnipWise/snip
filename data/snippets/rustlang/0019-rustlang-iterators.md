@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Iterators",
+  "tags": [
+    "rust",
+    "iterators"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Iterators
 Working with iterators
 ```rust

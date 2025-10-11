@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Loops",
+  "tags": [
+    "rust",
+    "loops"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Loops
 Different types of loops
 ```rust

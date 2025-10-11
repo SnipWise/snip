@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang Http Client",
+  "tags": [
+    "rust",
+    "http",
+    "networking"
+  ],
+  "language": "rust"
+}
+-->
+
 ## HTTP Client
 Making HTTP requests with reqwest
 ```rust

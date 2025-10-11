@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Closures",
+  "tags": [
+    "rust",
+    "closures"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Closures
 Using closures and functional programming
 ```rust

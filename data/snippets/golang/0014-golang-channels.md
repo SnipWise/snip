@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Channels",
+  "tags": [
+    "go",
+    "concurrency"
+  ],
+  "language": "go"
+}
+-->
+
 ## Channels
 Communication between goroutines
 ```go

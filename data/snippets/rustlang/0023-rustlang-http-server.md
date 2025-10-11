@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang Http Server",
+  "tags": [
+    "rust",
+    "http",
+    "networking"
+  ],
+  "language": "rust"
+}
+-->
+
 ## HTTP Server
 Creating a simple HTTP server with warp
 ```rust

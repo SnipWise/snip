@@ -25,7 +25,7 @@ services:
       SNIPPETS_FOLDER: snippets
 
       SIMILARITY_THRESHOLD: 0.6
-      SIMILARITY_MAX_RESULTS: 2
+      SIMILARITY_MAX_RESULTS: 3
 
     volumes:
       - ./data/snippets:/app/snippets

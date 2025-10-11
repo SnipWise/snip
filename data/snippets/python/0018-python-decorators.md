@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Decorators",
+  "tags": [
+    "python",
+    "decorators"
+  ],
+  "language": "python"
+}
+-->
+
 ## Decorators
 Function and class decorators
 ```python

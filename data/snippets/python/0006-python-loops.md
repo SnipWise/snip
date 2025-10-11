@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Loops",
+  "tags": [
+    "python",
+    "loops"
+  ],
+  "language": "python"
+}
+-->
+
 ## Loops
 Different types of loops
 ```python

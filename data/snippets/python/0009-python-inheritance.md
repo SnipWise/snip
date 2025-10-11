@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Inheritance",
+  "tags": [
+    "python",
+    "oop"
+  ],
+  "language": "python"
+}
+-->
+
 ## Inheritance
 Class inheritance and method overriding
 ```python

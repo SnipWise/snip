@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang String Manipulation",
+  "tags": [
+    "go",
+    "io",
+    "strings"
+  ],
+  "language": "go"
+}
+-->
+
 ## String Manipulation
 Common string operations
 ```go

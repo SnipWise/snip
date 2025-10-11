@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Testing",
+  "tags": [
+    "go",
+    "testing"
+  ],
+  "language": "go"
+}
+-->
+
 ## Testing
 Unit tests and table-driven tests
 ```go

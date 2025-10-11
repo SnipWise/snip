@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Database Connection",
+  "tags": [
+    "go",
+    "io",
+    "database"
+  ],
+  "language": "go"
+}
+-->
+
 ## Database Connection
 Basic database operations with PostgreSQL
 ```go

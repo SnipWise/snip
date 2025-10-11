@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Context Usage",
+  "tags": [
+    "go",
+    "context"
+  ],
+  "language": "go"
+}
+-->
+
 ## Context Usage
 Using context for cancellation and timeouts
 ```go

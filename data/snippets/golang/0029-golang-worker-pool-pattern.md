@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Worker Pool Pattern",
+  "tags": [
+    "go",
+    "patterns"
+  ],
+  "language": "go"
+}
+-->
+
 ## Worker Pool Pattern
 Concurrent task processing with worker pool
 ```go

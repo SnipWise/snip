@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Threads",
+  "tags": [
+    "rust",
+    "concurrency"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Threads
 Multi-threading and synchronization
 ```rust

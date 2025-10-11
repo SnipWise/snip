@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Arrays And Slices",
+  "tags": [
+    "go",
+    "arrays",
+    "slices"
+  ],
+  "language": "go"
+}
+-->
+
 ## Arrays and Slices
 Working with arrays and slices
 ```go

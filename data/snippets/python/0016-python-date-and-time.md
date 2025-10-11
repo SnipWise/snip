@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Date And Time",
+  "tags": [
+    "python",
+    "time"
+  ],
+  "language": "python"
+}
+-->
+
 ## Date and Time
 Working with datetime module
 ```python

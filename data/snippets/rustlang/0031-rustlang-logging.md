@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Logging",
+  "tags": [
+    "rust",
+    "logging"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Logging
 Structured logging with log and env_logger
 ```rust

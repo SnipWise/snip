@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Interfaces",
+  "tags": [
+    "go",
+    "interfaces"
+  ],
+  "language": "go"
+}
+-->
+
 ## Interfaces
 Defining and implementing interfaces
 ```go

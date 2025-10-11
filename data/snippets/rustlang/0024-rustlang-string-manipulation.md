@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang String Manipulation",
+  "tags": [
+    "rust",
+    "io",
+    "strings"
+  ],
+  "language": "rust"
+}
+-->
+
 ## String Manipulation
 Common string operations
 ```rust

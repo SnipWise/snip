@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Async Programming",
+  "tags": [
+    "rust",
+    "async"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Async Programming
 Asynchronous programming with async/await
 ```rust

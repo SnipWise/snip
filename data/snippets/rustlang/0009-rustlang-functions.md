@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang Functions",
+  "tags": [
+    "rust",
+    "functions",
+    "io"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Functions
 Function declaration and parameters
 ```rust

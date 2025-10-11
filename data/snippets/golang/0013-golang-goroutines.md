@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Goroutines",
+  "tags": [
+    "go",
+    "concurrency"
+  ],
+  "language": "go"
+}
+-->
+
 ## Goroutines
 Concurrent programming with goroutines
 ```go

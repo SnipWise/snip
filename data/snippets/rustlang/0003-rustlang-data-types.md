@@ -1,3 +1,13 @@
+<!-- METADATA
+{
+  "title": "Rustlang Data Types",
+  "tags": [
+    "rust"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Data Types
 Working with basic data types
 ```rust

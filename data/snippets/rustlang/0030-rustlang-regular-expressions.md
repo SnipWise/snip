@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang Regular Expressions",
+  "tags": [
+    "rust",
+    "io",
+    "regex"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Regular Expressions
 Pattern matching with regex
 ```rust

@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Middleware Pattern",
+  "tags": [
+    "go",
+    "patterns"
+  ],
+  "language": "go"
+}
+-->
+
 ## Middleware Pattern
 HTTP middleware implementation
 ```go

@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang Variable Declaration",
+  "tags": [
+    "rust",
+    "variables",
+    "io"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Variable Declaration
 Different ways to declare and initialize variables
 ```rust

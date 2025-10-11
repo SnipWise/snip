@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Rustlang Enums",
+  "tags": [
+    "rust",
+    "enums"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Enums
 Defining and using enums
 ```rust

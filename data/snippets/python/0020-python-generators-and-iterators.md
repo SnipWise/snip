@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Python Generators And Iterators",
+  "tags": [
+    "python",
+    "generators",
+    "iterators"
+  ],
+  "language": "python"
+}
+-->
+
 ## Generators and Iterators
 Creating generators and custom iterators
 ```python

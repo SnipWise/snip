@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Golang Command Line Arguments",
+  "tags": [
+    "go",
+    "cli"
+  ],
+  "language": "go"
+}
+-->
+
 ## Command Line Arguments
 Parsing command line arguments
 ```go

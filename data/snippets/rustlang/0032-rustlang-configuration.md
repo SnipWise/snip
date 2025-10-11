@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Rustlang Configuration",
+  "tags": [
+    "rust",
+    "io",
+    "configuration"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Configuration
 Managing configuration with config crate
 ```rust

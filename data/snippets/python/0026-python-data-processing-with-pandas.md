@@ -1,3 +1,14 @@
+<!-- METADATA
+{
+  "title": "Python Data Processing With Pandas",
+  "tags": [
+    "python",
+    "data-processing"
+  ],
+  "language": "python"
+}
+-->
+
 ## Data Processing with Pandas
 Basic data manipulation with pandas
 ```python

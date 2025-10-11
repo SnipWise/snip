@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Time Operations",
+  "tags": [
+    "go",
+    "io",
+    "time"
+  ],
+  "language": "go"
+}
+-->
+
 ## Time Operations
 Working with time and date
 ```go

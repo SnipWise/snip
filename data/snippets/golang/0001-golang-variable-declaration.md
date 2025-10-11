@@ -1,3 +1,15 @@
+<!-- METADATA
+{
+  "title": "Golang Variable Declaration",
+  "tags": [
+    "go",
+    "variables",
+    "io"
+  ],
+  "language": "go"
+}
+-->
+
 ## Variable Declaration
 Different ways to declare and initialize variables
 ```go

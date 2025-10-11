@@ -1,3 +1,16 @@
+<!-- METADATA
+{
+  "title": "Rustlang Option And Result",
+  "tags": [
+    "rust",
+    "io",
+    "option",
+    "result"
+  ],
+  "language": "rust"
+}
+-->
+
 ## Option and Result
 Working with Option and Result types
 ```rust
