@@ -21,9 +21,7 @@ services:
 
       HTTP_PORT: 8080
 
-      #JSON_STORE_FILE_PATH: store/rag-memory-store.json
       SNIPPETS_FOLDER: snippets
-
       SIMILARITY_THRESHOLD: 0.6
       SIMILARITY_MAX_RESULTS: 3
 
@@ -43,7 +41,8 @@ services:
 
 models:
   snip-model:
-    model: hf.co/menlo/jan-nano-gguf:q4_k_m
+    #model: hf.co/menlo/jan-nano-gguf:q4_k_m
+    model: ai/qwen2.5:latest
     context_size: 8192
     #model: hf.co/menlo/lucy-gguf:q4_k_m
     # context_size: 4096
