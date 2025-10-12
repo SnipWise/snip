@@ -69,8 +69,8 @@ func main() {
 	fmt.Println("✅ Embeddings generated and vector store ready with", len(store.Records), "records")
 
 	// [IMPORTANT] only for testing and checking
-	//fmt.Println("🚧 Example record:")
-	//fmt.Println(store.Records["9ce717f4-53ee-40f1-ac62-a3e0c55f67e4"].Prompt)
+	fmt.Println("🚧 Example record:")
+	fmt.Println(store.Records["9ce717f4-53ee-40f1-ac62-a3e0c55f67e4"].Prompt)
 
 	systemInstruction := helpers.GetEnvOrDefault("SYSTEM_INSTRUCTION", "You are a helpful AI assistant.")
 
