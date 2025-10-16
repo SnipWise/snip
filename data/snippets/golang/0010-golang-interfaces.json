@@ -1,5 +1,5 @@
 {
-  "id": "deeb0e7b-ff01-484f-afd0-e14345bcde9d",
+  "id": "e8b1abc2-5c5c-4789-9df8-9054f6fca79f",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Interfaces\",\n  \"tags\": [\n    \"go\",\n    \"interfaces\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Interfaces\nDefining and implementing interfaces\n```go\npackage main\n\nimport \"fmt\"\n\ntype Shape interface {\n    Area() float64\n}\n\ntype Rectangle struct {\n    Width, Height float64\n}\n\nfunc (r Rectangle) Area() float64 {\n    return r.Width * r.Height\n}\n\nfunc main() {\n    var s Shape = Rectangle{Width: 5, Height: 3}\n    fmt.Printf(\"Area: %.2f\\n\", s.Area())\n}\n```",
   "embedding": [
     -0.008061262,

@@ -1,5 +1,5 @@
 {
-  "id": "3e2103cd-4673-4fd4-a73c-3556a59e4218",
+  "id": "18d2e044-6cd0-4b4e-a0ea-8f71155621df",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Regular Expressions\",\n  \"tags\": [\n    \"go\",\n    \"io\",\n    \"regex\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Regular Expressions\nPattern matching with regex\n```go\npackage main\n\nimport (\n    \"fmt\"\n    \"regexp\"\n)\n\nfunc main() {\n    emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`)\n    \n    emails := []string{\"user@example.com\", \"invalid.email\", \"test@domain.co.uk\"}\n    \n    for _, email := range emails {\n        isValid := emailRegex.MatchString(email)\n        fmt.Printf(\"%s: %t\\n\", email, isValid)\n    }\n    \n    text := \"Contact us at info@company.com\"\n    matches := emailRegex.FindAllString(text, -1)\n    fmt.Printf(\"Found emails: %v\\n\", matches)\n}\n```",
   "embedding": [
     0.009267502,

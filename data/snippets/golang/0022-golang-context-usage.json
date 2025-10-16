@@ -1,5 +1,5 @@
 {
-  "id": "ce84139f-919c-4451-be7b-99a656d1641c",
+  "id": "d11b7ac7-a396-49bf-80ac-87e140c18324",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Context Usage\",\n  \"tags\": [\n    \"go\",\n    \"context\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Context Usage\nUsing context for cancellation and timeouts\n```go\npackage main\n\nimport (\n    \"context\"\n    \"fmt\"\n    \"time\"\n)\n\nfunc longTask(ctx context.Context) error {\n    select {\n    case \u003c-time.After(2 * time.Second):\n        fmt.Println(\"Task completed\")\n        return nil\n    case \u003c-ctx.Done():\n        fmt.Printf(\"Task cancelled: %v\\n\", ctx.Err())\n        return ctx.Err()\n    }\n}\n\nfunc main() {\n    ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)\n    defer cancel()\n    \n    longTask(ctx)\n}\n```",
   "embedding": [
     -0.0189042,

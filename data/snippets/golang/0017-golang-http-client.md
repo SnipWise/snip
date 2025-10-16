@@ -17,7 +17,7 @@ package main
 
 import (
     "fmt"
-    "io/ioutil"
+    "io"
     "net/http"
 )
 
@@ -28,8 +28,8 @@ func main() {
         return
     }
     defer resp.Body.Close()
-    
-    body, err := ioutil.ReadAll(resp.Body)
+
+    body, err := io.ReadAll(resp.Body)
     if err != nil {
         fmt.Printf("Error reading response: %v\n", err)
         return

@@ -1,5 +1,5 @@
 {
-  "id": "0c54459a-c766-4a77-8ae0-4be75c0b54b5",
+  "id": "204f765b-b3aa-43ef-ad68-7343ebd0661e",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Command Line Arguments\",\n  \"tags\": [\n    \"go\",\n    \"cli\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Command Line Arguments\nParsing command line arguments\n```go\npackage main\n\nimport (\n    \"flag\"\n    \"fmt\"\n    \"os\"\n)\n\nfunc main() {\n    var name = flag.String(\"name\", \"World\", \"Name to greet\")\n    var age = flag.Int(\"age\", 0, \"Age of person\")\n    var verbose = flag.Bool(\"verbose\", false, \"Verbose output\")\n    \n    flag.Parse()\n    \n    if *verbose {\n        fmt.Printf(\"Name: %s, Age: %d\\n\", *name, *age)\n    }\n    \n    fmt.Printf(\"Hello, %s!\\n\", *name)\n    \n    // Remaining arguments\n    args := flag.Args()\n    if len(args) \u003e 0 {\n        fmt.Printf(\"Extra args: %v\\n\", args)\n    }\n}\n```",
   "embedding": [
     0.021676205,

@@ -1,5 +1,5 @@
 {
-  "id": "84ccae05-6c70-4197-b544-7d23c465d4f9",
+  "id": "7809c8e5-4708-4c62-a387-d1cd6ffbfdbf",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Goroutines\",\n  \"tags\": [\n    \"go\",\n    \"concurrency\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Goroutines\nConcurrent programming with goroutines\n```go\npackage main\n\nimport (\n    \"fmt\"\n    \"sync\"\n    \"time\"\n)\n\nfunc worker(id int, wg *sync.WaitGroup) {\n    defer wg.Done()\n    fmt.Printf(\"Worker %d starting\\n\", id)\n    time.Sleep(100 * time.Millisecond)\n    fmt.Printf(\"Worker %d done\\n\", id)\n}\n\nfunc main() {\n    var wg sync.WaitGroup\n    for i := 1; i \u003c= 3; i++ {\n        wg.Add(1)\n        go worker(i, \u0026wg)\n    }\n    wg.Wait()\n}\n```",
   "embedding": [
     0.0010559411,

@@ -1,5 +1,5 @@
 {
-  "id": "3561e24e-52fb-48bb-a494-6275c631bc0c",
+  "id": "593c8845-0602-41a7-9e46-ca88fcf4a9b1",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Configuration Management\",\n  \"tags\": [\n    \"go\",\n    \"io\",\n    \"configuration\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Configuration Management\nManaging application configuration\n```go\npackage main\n\nimport (\n    \"encoding/json\"\n    \"fmt\"\n    \"os\"\n)\n\ntype Config struct {\n    Server struct {\n        Host string `json:\"host\"`\n        Port int    `json:\"port\"`\n    } `json:\"server\"`\n    Database struct {\n        Host     string `json:\"host\"`\n        Username string `json:\"username\"`\n    } `json:\"database\"`\n}\n\nfunc loadConfig(filename string) (*Config, error) {\n    file, err := os.Open(filename)\n    if err != nil {\n        return nil, err\n    }\n    defer file.Close()\n    \n    var config Config\n    decoder := json.NewDecoder(file)\n    err = decoder.Decode(\u0026config)\n    return \u0026config, err\n}\n\nfunc main() {\n    config, err := loadConfig(\"config.json\")\n    if err != nil {\n        fmt.Printf(\"Error loading config: %v\\n\", err)\n        return\n    }\n    \n    fmt.Printf(\"Server: %s:%d\\n\", config.Server.Host, config.Server.Port)\n}\n```",
   "embedding": [
     0.011120112,

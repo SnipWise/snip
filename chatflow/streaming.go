@@ -23,6 +23,23 @@ type ChatResponse struct {
 	Response string `json:"response"`
 }
 
+// SimilarityResult represents a single similarity search result
+type SimilarityResult struct {
+	ID         string  `json:"id"`
+	Similarity float64 `json:"similarity"`
+	Content    string  `json:"content"`
+}
+
+// SimilaritiesData holds the user message and found similarities
+type SimilaritiesData struct {
+	UserMessage string             `json:"user_message"`
+	Count       int                `json:"count"`
+	Results     []SimilarityResult `json:"results"`
+}
+
+// UpdateSimilaritiesFunc is a function type for updating similarities data
+type UpdateSimilaritiesFunc func(userMessage string, details []embeddings.SimilarityDetail)
+
 // StreamingChatFlowConfig holds configuration for the streaming chat flow
 type StreamingChatFlowConfig struct {
 	SnipModel         string
@@ -31,6 +48,7 @@ type StreamingChatFlowConfig struct {
 	ActiveCompletions *map[string]context.CancelFunc
 	CompletionsMutex  *sync.RWMutex
 	ContextSizeLimit  int
+	UpdateSimilarities UpdateSimilaritiesFunc
 }
 
 // DefineStreamingChatFlow creates and returns a streaming chat flow
@@ -39,12 +57,17 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 		g,
 		"streaming-chat",
 		func(ctx context.Context, input *ChatRequest, callback core.StreamCallback[string]) (*ChatResponse, error) {
-			
+
 			// [BEGIN] Similarity search
 			// Retrieve relevant context from the vector store
-			similarDocuments, err := embeddings.RetrieveSimilarDocuments(ctx, input.Message, config.MemoryRetriever)
+			similarDocuments, details, err := embeddings.RetrieveSimilarDocuments(ctx, input.Message, config.MemoryRetriever)
 			if err != nil {
 				log.Fatal(err)
+			}
+
+			// Update global similarities data via callback
+			if config.UpdateSimilarities != nil {
+				config.UpdateSimilarities(input.Message, details)
 			}
 
 			if similarDocuments != "" {

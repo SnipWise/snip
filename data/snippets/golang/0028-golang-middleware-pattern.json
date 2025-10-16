@@ -1,5 +1,5 @@
 {
-  "id": "73c3d293-38c8-471f-9fe0-afbc90e1d820",
+  "id": "9ec00b7f-3b54-458f-97c9-8054a8784264",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Middleware Pattern\",\n  \"tags\": [\n    \"go\",\n    \"patterns\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Middleware Pattern\nHTTP middleware implementation\n```go\npackage main\n\nimport (\n    \"fmt\"\n    \"log\"\n    \"net/http\"\n    \"time\"\n)\n\ntype Middleware func(http.HandlerFunc) http.HandlerFunc\n\nfunc loggingMiddleware(next http.HandlerFunc) http.HandlerFunc {\n    return func(w http.ResponseWriter, r *http.Request) {\n        start := time.Now()\n        log.Printf(\"Started %s %s\", r.Method, r.URL.Path)\n        next(w, r)\n        log.Printf(\"Completed in %v\", time.Since(start))\n    }\n}\n\nfunc homeHandler(w http.ResponseWriter, r *http.Request) {\n    fmt.Fprintf(w, \"Hello, World!\")\n}\n\nfunc main() {\n    http.HandleFunc(\"/\", loggingMiddleware(homeHandler))\n    log.Fatal(http.ListenAndServe(\":8080\", nil))\n}\n```",
   "embedding": [
     0.01874111,

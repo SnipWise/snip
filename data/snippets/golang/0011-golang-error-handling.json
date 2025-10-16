@@ -1,5 +1,5 @@
 {
-  "id": "7c7e10d8-c217-4345-a8e9-ab0c87cb373b",
+  "id": "8aba84f6-2b55-43da-a9fd-97d9825663a0",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Error Handling\",\n  \"tags\": [\n    \"go\",\n    \"error-handling\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Error Handling\nProper error handling patterns\n```go\npackage main\n\nimport (\n    \"errors\"\n    \"fmt\"\n)\n\nvar ErrDivisionByZero = errors.New(\"division by zero\")\n\nfunc safeDivide(a, b float64) (float64, error) {\n    if b == 0 {\n        return 0, ErrDivisionByZero\n    }\n    return a / b, nil\n}\n\nfunc main() {\n    result, err := safeDivide(10, 0)\n    if err != nil {\n        fmt.Printf(\"Error: %v\\n\", err)\n    } else {\n        fmt.Printf(\"Result: %f\\n\", result)\n    }\n}\n```",
   "embedding": [
     -0.0063906075,

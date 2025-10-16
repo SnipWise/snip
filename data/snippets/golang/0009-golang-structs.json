@@ -1,5 +1,5 @@
 {
-  "id": "b78cf15a-2f63-4d42-bcd6-aef1fd6b2241",
+  "id": "1f114bbf-9d8b-4aed-8578-f52d32662c67",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Structs\",\n  \"tags\": [\n    \"go\",\n    \"structs\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Structs\nDefining and using structs\n```go\npackage main\n\nimport \"fmt\"\n\ntype Person struct {\n    Name string\n    Age  int\n}\n\nfunc (p Person) Greet() string {\n    return fmt.Sprintf(\"Hello, I'm %s\", p.Name)\n}\n\nfunc main() {\n    person := Person{Name: \"Alice\", Age: 30}\n    fmt.Printf(\"Person: %+v\\n\", person)\n    fmt.Println(person.Greet())\n}\n```",
   "embedding": [
     -0.0055306526,

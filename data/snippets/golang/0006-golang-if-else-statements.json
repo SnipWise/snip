@@ -1,5 +1,5 @@
 {
-  "id": "545c73a4-5c21-4026-8109-b1ee1ac3f50d",
+  "id": "80f51aca-b665-4d44-8760-c27572e5a15a",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang If Else Statements\",\n  \"tags\": [\n    \"go\",\n    \"control-flow\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## If-Else Statements\nConditional statements\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    age := 25\n    if age \u003e= 18 {\n        fmt.Println(\"Adult\")\n    } else {\n        fmt.Println(\"Minor\")\n    }\n    \n    // If with short variable declaration\n    if num := 42; num \u003e 40 {\n        fmt.Printf(\"Number %d \u003e 40\\n\", num)\n    }\n}\n```",
   "embedding": [
     0.0012488911,

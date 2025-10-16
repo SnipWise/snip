@@ -1,5 +1,5 @@
 {
-  "id": "3e7f2945-ba83-449f-988d-82c3111234e7",
+  "id": "1390d8e1-5f8a-4494-8de4-feaf2db68ad7",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Database Connection\",\n  \"tags\": [\n    \"go\",\n    \"io\",\n    \"database\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Database Connection\nBasic database operations with PostgreSQL\n```go\npackage main\n\nimport (\n    \"database/sql\"\n    \"fmt\"\n    \"log\"\n    \n    _ \"github.com/lib/pq\"\n)\n\ntype User struct {\n    ID    int\n    Name  string\n    Email string\n}\n\nfunc main() {\n    db, err := sql.Open(\"postgres\", \"host=localhost dbname=test sslmode=disable\")\n    if err != nil {\n        log.Fatal(err)\n    }\n    defer db.Close()\n    \n    var user User\n    err = db.QueryRow(\"SELECT id, name, email FROM users WHERE id = $1\", 1).\n        Scan(\u0026user.ID, \u0026user.Name, \u0026user.Email)\n    \n    if err != nil {\n        fmt.Printf(\"Error: %v\\n\", err)\n    } else {\n        fmt.Printf(\"User: %+v\\n\", user)\n    }\n}\n```",
   "embedding": [
     -0.0076056654,
