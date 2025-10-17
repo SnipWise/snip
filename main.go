@@ -48,9 +48,11 @@ type SimilaritiesData struct {
 
 // Global maps and mutexes
 var (
-	activeCompletions = make(map[string]context.CancelFunc)
-	completionsMutex  = sync.RWMutex{}
-	messages          []*ai.Message
+	activeCompletions   = make(map[string]context.CancelFunc)
+	completionsMutex    = sync.RWMutex{}
+	pendingOperations   = make(map[string]*chatflow.OperationStatus)
+	operationsMutex     = sync.RWMutex{}
+	messages            []*ai.Message
 	currentSimilarities SimilaritiesData
 	similaritiesMutex   sync.RWMutex
 )
@@ -94,12 +96,14 @@ func main() {
 
 	// Definition of a streaming flow
 	streamingChatFlow := chatflow.DefineStreamingChatFlow(g, chatflow.StreamingChatFlowConfig{
-		SnipModel:         snipModel,
-		MemoryRetriever:   memoryRetriever,
-		Messages:          &messages,
-		ActiveCompletions: &activeCompletions,
-		CompletionsMutex:  &completionsMutex,
-		ContextSizeLimit:  contextSizeLimit,
+		SnipModel:          snipModel,
+		MemoryRetriever:    memoryRetriever,
+		Messages:           &messages,
+		ActiveCompletions:  &activeCompletions,
+		CompletionsMutex:   &completionsMutex,
+		PendingOperations:  &pendingOperations,
+		OperationsMutex:    &operationsMutex,
+		ContextSizeLimit:   contextSizeLimit,
 		UpdateSimilarities: func(userMessage string, details []embeddings.SimilarityDetail) {
 			similaritiesMutex.Lock()
 			defer similaritiesMutex.Unlock()
@@ -220,6 +224,111 @@ func main() {
 			"status":           "ok",
 			"chat_model":       snipModel,
 			"embeddings_model": embeddingsModel,
+		})
+	})
+
+	// Operation validate endpoint
+	mux.HandleFunc("POST /operation/validate", func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			OperationID string `json:"operation_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "invalid request"})
+			return
+		}
+
+		operationsMutex.Lock()
+		operation, exists := pendingOperations[req.OperationID]
+		if exists {
+			operation.Status = "validated"
+			operation.Continue <- true
+		}
+		operationsMutex.Unlock()
+
+		if !exists {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"error": "operation not found"})
+			return
+		}
+
+		log.Printf("Operation %s validated", req.OperationID)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]any{
+			"status":       "ok",
+			"operation_id": req.OperationID,
+			"message":      "Operation validated and continued",
+		})
+	})
+
+	// Operation cancel endpoint - marks as cancelled but continues
+	mux.HandleFunc("POST /operation/cancel", func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			OperationID string `json:"operation_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "invalid request"})
+			return
+		}
+
+		operationsMutex.Lock()
+		operation, exists := pendingOperations[req.OperationID]
+		if exists {
+			operation.Status = "cancelled"
+			operation.Continue <- true // Continue but with cancelled status
+		}
+		operationsMutex.Unlock()
+
+		if !exists {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"error": "operation not found"})
+			return
+		}
+
+		log.Printf("Operation %s cancelled but continuing", req.OperationID)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]any{
+			"status":       "ok",
+			"operation_id": req.OperationID,
+			"message":      "Operation cancelled but stream continues",
+		})
+	})
+
+	// Operation reset endpoint - marks as cancelled and stops
+	mux.HandleFunc("POST /operation/reset", func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			OperationID string `json:"operation_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "invalid request"})
+			return
+		}
+
+		operationsMutex.Lock()
+		operation, exists := pendingOperations[req.OperationID]
+		if exists {
+			operation.Status = "reset"
+			operation.Continue <- false // Stop the stream
+		}
+		operationsMutex.Unlock()
+
+		if !exists {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"error": "operation not found"})
+			return
+		}
+
+		log.Printf("Operation %s reset and stopped", req.OperationID)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]any{
+			"status":       "ok",
+			"operation_id": req.OperationID,
+			"message":      "Operation reset and stopped",
 		})
 	})
 

@@ -2,7 +2,7 @@
     "workbench.iconTheme": "material-icon-theme",
     "workbench.colorTheme": "Idea intellij light theme",
     "editor.fontSize": 16,
-    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.fontSize": 14,
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
     "editor.detectIndentation": true,
@@ -91,6 +91,14 @@
             "borderRadius": "3px",
             "isWholeLine": false
         },  
+        {
+            "text": "Tool calls detection",
+            "color": "#000000",
+            "backgroundColor": "#E0AEF1",
+            "border": "1px solid #E0AEF1",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },          
         {
             "text": "Similarity search",
             "color": "#000000",
