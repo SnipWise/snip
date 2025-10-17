@@ -1,5 +1,5 @@
 {
-  "id": "a2e9068c-7e35-45a3-baf0-37c3d36900cc",
+  "id": "2a1238cf-9490-4043-acf5-14c549f38a63",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Json Handling\",\n  \"tags\": [\n    \"go\",\n    \"json\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## JSON Handling\nMarshal and unmarshal JSON data\n```go\npackage main\n\nimport (\n    \"encoding/json\"\n    \"fmt\"\n)\n\ntype Person struct {\n    Name  string `json:\"name\"`\n    Age   int    `json:\"age\"`\n    Email string `json:\"email,omitempty\"`\n}\n\nfunc main() {\n    person := Person{Name: \"Alice\", Age: 30, Email: \"alice@example.com\"}\n    \n    jsonData, _ := json.Marshal(person)\n    fmt.Printf(\"JSON: %s\\n\", string(jsonData))\n    \n    var newPerson Person\n    json.Unmarshal(jsonData, \u0026newPerson)\n    fmt.Printf(\"Unmarshaled: %+v\\n\", newPerson)\n}\n```",
   "embedding": [
     -0.0046709534,

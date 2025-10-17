@@ -1,5 +1,5 @@
 {
-  "id": "057ac160-3e99-4a6f-8521-8a8762dc9456",
+  "id": "5fe9fb19-b3d9-411c-8549-016cc3735ee4",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Arrays And Slices\",\n  \"tags\": [\n    \"go\",\n    \"arrays\",\n    \"slices\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Arrays and Slices\nWorking with arrays and slices\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    arr := [3]int{1, 2, 3}\n    slice := []string{\"apple\", \"banana\", \"cherry\"}\n    slice = append(slice, \"date\")\n    \n    fmt.Printf(\"Array: %v\\n\", arr)\n    fmt.Printf(\"Slice: %v, Len: %d\\n\", slice, len(slice))\n}\n```",
   "embedding": [
     0.005815458,

@@ -1,5 +1,5 @@
 {
-  "id": "2cc48bb4-b46e-4a00-9d54-15215834c9a7",
+  "id": "b27f1cf1-2693-4c02-8377-befb42fb6a4a",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang String Manipulation\",\n  \"tags\": [\n    \"go\",\n    \"io\",\n    \"strings\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## String Manipulation\nCommon string operations\n```go\npackage main\n\nimport (\n    \"fmt\"\n    \"strconv\"\n    \"strings\"\n)\n\nfunc main() {\n    text := \"  Hello, World!  \"\n    \n    fmt.Printf(\"Trimmed: '%s'\\n\", strings.TrimSpace(text))\n    fmt.Printf(\"Upper: %s\\n\", strings.ToUpper(text))\n    fmt.Printf(\"Contains 'World': %t\\n\", strings.Contains(text, \"World\"))\n    \n    words := strings.Fields(strings.TrimSpace(text))\n    fmt.Printf(\"Words: %v\\n\", words)\n    \n    // String conversion\n    num, _ := strconv.Atoi(\"123\")\n    fmt.Printf(\"String to int: %d\\n\", num)\n}\n```",
   "embedding": [
     -0.00080405397,

@@ -1,5 +1,5 @@
 {
-  "id": "66c20034-e3ea-40d8-9536-00610a4cd6b1",
+  "id": "11110775-63e3-4a54-9438-3ff52e900a15",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Maps\",\n  \"tags\": [\n    \"go\",\n    \"maps\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Maps\nCreating and manipulating maps\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    fruits := map[string]int{\"orange\": 10, \"grape\": 15}\n    fruits[\"apple\"] = 5\n    \n    value, exists := fruits[\"apple\"]\n    fmt.Printf(\"Apple exists: %t, value: %d\\n\", exists, value)\n    \n    for key, value := range fruits {\n        fmt.Printf(\"%s: %d\\n\", key, value)\n    }\n}\n```",
   "embedding": [
     -0.00064792833,

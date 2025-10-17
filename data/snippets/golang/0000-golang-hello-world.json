@@ -1,5 +1,5 @@
 {
-  "id": "03fea36d-14b3-47ad-aeab-29071a5a12a3",
+  "id": "8bdd22f4-5bfd-4a23-907e-467049e9d148",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Hello World\",\n  \"tags\": [\n    \"go\",\n    \"basics\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Hello World\nBasic program structure and main function\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, World!\")\n}\n```",
   "embedding": [
     0.021689937,

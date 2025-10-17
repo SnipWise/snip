@@ -1,5 +1,5 @@
 {
-  "id": "df792ee0-8cba-4708-a268-a04066465ef5",
+  "id": "283b3165-2e49-42d6-908f-3da2a4741f13",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Time Operations\",\n  \"tags\": [\n    \"go\",\n    \"io\",\n    \"time\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Time Operations\nWorking with time and date\n```go\npackage main\n\nimport (\n    \"fmt\"\n    \"time\"\n)\n\nfunc main() {\n    now := time.Now()\n    fmt.Printf(\"Current time: %v\\n\", now)\n    fmt.Printf(\"Formatted: %s\\n\", now.Format(\"2006-01-02 15:04:05\"))\n    \n    tomorrow := now.Add(24 * time.Hour)\n    fmt.Printf(\"Tomorrow: %v\\n\", tomorrow)\n    \n    // Parse time string\n    timeStr := \"2023-12-25 10:30:00\"\n    parsed, _ := time.Parse(\"2006-01-02 15:04:05\", timeStr)\n    fmt.Printf(\"Parsed: %v\\n\", parsed)\n}\n```",
   "embedding": [
     0.0121975085,

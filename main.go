@@ -32,11 +32,27 @@ type Conversation struct {
 	Messages []ConversationMessage `json:"messages"`
 }
 
+// SimilarityResult represents a single similarity search result
+type SimilarityResult struct {
+	ID         string  `json:"id"`
+	Similarity float64 `json:"similarity"`
+	Content    string  `json:"content"`
+}
+
+// SimilaritiesData holds the user message and found similarities
+type SimilaritiesData struct {
+	UserMessage string             `json:"user_message"`
+	Count       int                `json:"count"`
+	Results     []SimilarityResult `json:"results"`
+}
+
 // Global maps and mutexes
 var (
 	activeCompletions = make(map[string]context.CancelFunc)
 	completionsMutex  = sync.RWMutex{}
 	messages          []*ai.Message
+	currentSimilarities SimilaritiesData
+	similaritiesMutex   sync.RWMutex
 )
 
 func main() {
@@ -84,6 +100,21 @@ func main() {
 		ActiveCompletions: &activeCompletions,
 		CompletionsMutex:  &completionsMutex,
 		ContextSizeLimit:  contextSizeLimit,
+		UpdateSimilarities: func(userMessage string, details []embeddings.SimilarityDetail) {
+			similaritiesMutex.Lock()
+			defer similaritiesMutex.Unlock()
+
+			currentSimilarities.UserMessage = userMessage
+			currentSimilarities.Count = len(details)
+			currentSimilarities.Results = make([]SimilarityResult, len(details))
+			for i, detail := range details {
+				currentSimilarities.Results[i] = SimilarityResult{
+					ID:         detail.ID,
+					Similarity: detail.Similarity,
+					Content:    detail.Content,
+				}
+			}
+		},
 	})
 
 	mux := http.NewServeMux()
@@ -160,6 +191,22 @@ func main() {
 			"tokens": totalTokens,
 			"count":  len(messages),
 			"limit":  contextSizeLimit,
+		})
+	})
+
+	// Similarities endpoint
+	mux.HandleFunc("GET /similarities", func(w http.ResponseWriter, r *http.Request) {
+		similaritiesMutex.RLock()
+		similaritiesData := currentSimilarities
+		similaritiesMutex.RUnlock()
+
+		log.Printf("Retrieving similarities data: %d results found", similaritiesData.Count)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]any{
+			"status": "ok",
+			"data":   similaritiesData,
 		})
 	})
 

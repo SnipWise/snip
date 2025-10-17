@@ -1,5 +1,5 @@
 {
-  "id": "b598fab4-1fb1-4003-9986-9f7aad626f0e",
+  "id": "8b9ca5ae-77bf-44d8-be99-33d3427309d2",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Variable Declaration\",\n  \"tags\": [\n    \"go\",\n    \"variables\",\n    \"io\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Variable Declaration\nDifferent ways to declare and initialize variables\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    var name string = \"John\"    // Explicit type\n    var age = 30               // Type inference\n    city := \"New York\"         // Short declaration\n    var x, y int = 1, 2       // Multiple variables\n    \n    fmt.Printf(\"Name: %s, Age: %d\\n\", name, age)\n}\n```",
   "embedding": [
     -0.011263003,

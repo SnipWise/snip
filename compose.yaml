@@ -18,12 +18,20 @@ services:
         You are Snip, an AI assistant that helps users write and understand code snippets.
         You provide concise explanations, code examples, and best practices for various programming tasks.
         Always aim to be clear, helpful, and accurate in your responses.
+        IMPORTANT: When providing code examples, concentrate carefully on syntax accuracy:
+        - Close all string quotes properly (" or ')
+        - Add semicolons (;) where needed
+        - Balance all brackets/parentheses
+        - Complete all statements
+        - Verify syntax is valid
+        Provide only well-formed, executable examples. Double-check before responding.
+
 
       HTTP_PORT: 8080
 
       SNIPPETS_FOLDER: snippets
-      SIMILARITY_THRESHOLD: 0.6
-      SIMILARITY_MAX_RESULTS: 3
+      SIMILARITY_THRESHOLD: 0.65
+      SIMILARITY_MAX_RESULTS: 8
 
       CONTEXT_SIZE_LIMIT: 8192
 
@@ -42,10 +50,11 @@ services:
 models:
   snip-model:
     #model: hf.co/menlo/jan-nano-gguf:q4_k_m
-    model: ai/qwen2.5:latest
+    model: hf.co/menlo/lucy-gguf:q4_k_m
+    #model: hf.co/qwen/qwen2.5-coder-1.5b-instruct-gguf:q4_k_m
+    #model: hf.co/qwen/qwen2.5-coder-3b-instruct-gguf:q4_k_m
+    #model: ai/qwen2.5:latest
     context_size: 8192
-    #model: hf.co/menlo/lucy-gguf:q4_k_m
-    # context_size: 4096
     runtime_flags:
         - "--temp"                # Temperature
         - "0.0"                   # Set temperature to 0.0  

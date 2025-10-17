@@ -1,5 +1,5 @@
 {
-  "id": "48766789-a246-4897-8de8-3bc79e89ba6c",
+  "id": "195a6b0b-0949-4fc3-bbab-d02c9aaf6124",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Switch Statements\",\n  \"tags\": [\n    \"go\",\n    \"control-flow\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Switch Statements\nSwitch case statements\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    day := 3\n    switch day {\n    case 1:\n        fmt.Println(\"Monday\")\n    case 2:\n        fmt.Println(\"Tuesday\")\n    case 3:\n        fmt.Println(\"Wednesday\")\n    default:\n        fmt.Println(\"Other\")\n    }\n}\n```",
   "embedding": [
     0.000062501014,

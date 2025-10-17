@@ -1,5 +1,5 @@
 {
-  "id": "bf2fa631-2925-46d5-99a6-d25a8ff5da6a",
+  "id": "4be86a24-cd45-4786-aa4b-ad6fe24b9523",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Functions\",\n  \"tags\": [\n    \"go\",\n    \"functions\",\n    \"io\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Functions\nFunction declaration and return values\n```go\npackage main\n\nimport \"fmt\"\n\nfunc add(a, b int) int {\n    return a + b\n}\n\nfunc divide(a, b float64) (float64, error) {\n    if b == 0 {\n        return 0, fmt.Errorf(\"division by zero\")\n    }\n    return a / b, nil\n}\n\nfunc main() {\n    sum := add(5, 3)\n    result, err := divide(10, 2)\n    fmt.Printf(\"Sum: %d, Division: %f, Error: %v\\n\", sum, result, err)\n}\n```",
   "embedding": [
     -0.005829527,

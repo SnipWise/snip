@@ -1,5 +1,5 @@
 {
-  "id": "88227791-f398-4a8c-b5c5-30a1c79fcec6",
+  "id": "d3720f5b-e9fe-4dd2-be3b-fa4e3fded401",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang For Loops\",\n  \"tags\": [\n    \"go\",\n    \"loops\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## For Loops\nDifferent types of for loops\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    // Basic for loop\n    for i := 0; i \u003c 3; i++ {\n        fmt.Printf(\"i = %d\\n\", i)\n    }\n    \n    // Range over slice\n    names := []string{\"Alice\", \"Bob\"}\n    for index, name := range names {\n        fmt.Printf(\"%d: %s\\n\", index, name)\n    }\n}\n```",
   "embedding": [
     -0.013477175,

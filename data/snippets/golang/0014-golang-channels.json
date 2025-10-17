@@ -1,5 +1,5 @@
 {
-  "id": "a54b81ac-c582-4ce9-a1ea-658ba114f8e2",
+  "id": "bb872b94-b804-4bed-b856-62b237fa37cb",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Channels\",\n  \"tags\": [\n    \"go\",\n    \"concurrency\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Channels\nCommunication between goroutines\n```go\npackage main\n\nimport \"fmt\"\n\nfunc producer(ch chan\u003c- int) {\n    for i := 1; i \u003c= 3; i++ {\n        ch \u003c- i\n        fmt.Printf(\"Sent: %d\\n\", i)\n    }\n    close(ch)\n}\n\nfunc main() {\n    ch := make(chan int)\n    go producer(ch)\n    \n    for value := range ch {\n        fmt.Printf(\"Received: %d\\n\", value)\n    }\n}\n```",
   "embedding": [
     -0.009708309,

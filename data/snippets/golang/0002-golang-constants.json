@@ -1,5 +1,5 @@
 {
-  "id": "241a498b-20e0-4047-ae4c-8a31840a5d27",
+  "id": "47446cd0-032c-4b56-983a-139b9c2d3ca5",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Constants\",\n  \"tags\": [\n    \"go\",\n    \"constants\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Constants\nDeclaring and using constants\n```go\npackage main\n\nimport \"fmt\"\n\nconst (\n    Pi       = 3.14159\n    MaxUsers = 100\n)\n\nfunc main() {\n    fmt.Printf(\"Pi: %f, Max Users: %d\\n\", Pi, MaxUsers)\n}\n```",
   "embedding": [
     0.031140525,

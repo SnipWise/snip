@@ -1,5 +1,5 @@
 {
-  "id": "830ffe84-7c2d-4b9f-84ab-aa534e9b041f",
+  "id": "3570b4b3-63dd-4397-94ab-4be5c9dc0ea0",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Logging\",\n  \"tags\": [\n    \"go\",\n    \"logging\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Logging\nDifferent logging approaches\n```go\npackage main\n\nimport (\n    \"log\"\n    \"log/slog\"\n    \"os\"\n)\n\nfunc main() {\n    // Standard logging\n    log.Println(\"Standard log message\")\n    log.Printf(\"User %s logged in\", \"Alice\")\n    \n    // Custom logger\n    logger := log.New(os.Stdout, \"APP: \", log.LstdFlags)\n    logger.Println(\"Custom logger message\")\n    \n    // Structured logging (Go 1.21+)\n    slog.Info(\"User action\", \n        \"user_id\", 123, \n        \"action\", \"login\")\n    \n    slog.Error(\"Database error\", \n        \"error\", \"connection timeout\",\n        \"retry_count\", 3)\n}\n```",
   "embedding": [
     0.0052503175,

@@ -9,8 +9,15 @@ import (
 	"github.com/firebase/genkit/go/ai"
 )
 
-// RetrieveSimilarDocuments performs similarity search and returns relevant context
-func RetrieveSimilarDocuments(ctx context.Context, query string, retriever ai.Retriever) (string, error) {
+// SimilarityDetail represents detailed information about a similarity search result
+type SimilarityDetail struct {
+	ID         string
+	Similarity float64
+	Content    string
+}
+
+// RetrieveSimilarDocuments performs similarity search and returns relevant context with details
+func RetrieveSimilarDocuments(ctx context.Context, query string, retriever ai.Retriever) (string, []SimilarityDetail, error) {
 	// Create a query document from the user question
 	queryDoc := ai.DocumentFromText(query, nil)
 
@@ -29,19 +36,28 @@ func RetrieveSimilarDocuments(ctx context.Context, query string, retriever ai.Re
 	// Use the memory vector retriever to find similar documents
 	retrieveResponse, err := retriever.Retrieve(ctx, request)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	similarDocuments := ""
+	details := make([]SimilarityDetail, 0, len(retrieveResponse.Documents))
 
 	fmt.Printf("\nFound %d similar documents:\n", len(retrieveResponse.Documents))
 	for i, doc := range retrieveResponse.Documents {
-		similarity := doc.Metadata["cosine_similarity"]
-		id := doc.Metadata["id"]
+		similarity := doc.Metadata["cosine_similarity"].(float64)
+		id := doc.Metadata["id"].(string)
+		content := doc.Content[0].Text
+
 		fmt.Printf("%d. ID: %s, Similarity: %.4f\n", i+1, id, similarity)
-		fmt.Printf("   Content: %s\n\n", doc.Content[0].Text)
-		similarDocuments += doc.Content[0].Text
+		fmt.Printf("   Content: %s\n\n", content)
+
+		similarDocuments += content
+		details = append(details, SimilarityDetail{
+			ID:         id,
+			Similarity: similarity,
+			Content:    content,
+		})
 	}
 
-	return similarDocuments, nil
+	return similarDocuments, details, nil
 }

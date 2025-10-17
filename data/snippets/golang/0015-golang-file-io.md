@@ -17,19 +17,18 @@ package main
 
 import (
     "fmt"
-    "io/ioutil"
     "os"
 )
 
 func main() {
     content := "Hello, World!\n"
-    err := ioutil.WriteFile("test.txt", []byte(content), 0644)
+    err := os.WriteFile("test.txt", []byte(content), 0644)
     if err != nil {
         fmt.Printf("Error writing: %v\n", err)
         return
     }
-    
-    data, err := ioutil.ReadFile("test.txt")
+
+    data, err := os.ReadFile("test.txt")
     if err != nil {
         fmt.Printf("Error reading: %v\n", err)
         return

@@ -1,5 +1,5 @@
 {
-  "id": "7f9c408c-5de5-4758-bad4-0a98dc7010c8",
+  "id": "a1a889e0-6411-4d62-b116-1f14fb852c83",
   "prompt": "\u003c!-- METADATA\n{\n  \"title\": \"Golang Pointers\",\n  \"tags\": [\n    \"go\",\n    \"pointers\"\n  ],\n  \"language\": \"go\"\n}\n--\u003e\n\n## Pointers\nWorking with pointers\n```go\npackage main\n\nimport \"fmt\"\n\nfunc modifyValue(x *int) {\n    *x = 100\n}\n\nfunc main() {\n    value := 42\n    ptr := \u0026value\n    \n    fmt.Printf(\"Value: %d, Address: %p\\n\", value, ptr)\n    fmt.Printf(\"Value via pointer: %d\\n\", *ptr)\n    \n    modifyValue(\u0026value)\n    fmt.Printf(\"Modified value: %d\\n\", value)\n}\n```",
   "embedding": [
     -0.024467317,
