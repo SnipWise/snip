@@ -40,14 +40,23 @@ type SimilaritiesData struct {
 // UpdateSimilaritiesFunc is a function type for updating similarities data
 type UpdateSimilaritiesFunc func(userMessage string, details []embeddings.SimilarityDetail)
 
+// OperationStatus represents the status of a pending operation
+type OperationStatus struct {
+	ID       string
+	Status   string // "pending", "validated", "cancelled"
+	Continue chan bool
+}
+
 // StreamingChatFlowConfig holds configuration for the streaming chat flow
 type StreamingChatFlowConfig struct {
-	SnipModel         string
-	MemoryRetriever   ai.Retriever
-	Messages          *[]*ai.Message
-	ActiveCompletions *map[string]context.CancelFunc
-	CompletionsMutex  *sync.RWMutex
-	ContextSizeLimit  int
+	SnipModel          string
+	MemoryRetriever    ai.Retriever
+	Messages           *[]*ai.Message
+	ActiveCompletions  *map[string]context.CancelFunc
+	CompletionsMutex   *sync.RWMutex
+	PendingOperations  *map[string]*OperationStatus
+	OperationsMutex    *sync.RWMutex
+	ContextSizeLimit   int
 	UpdateSimilarities UpdateSimilaritiesFunc
 }
 
@@ -57,6 +66,56 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 		g,
 		"streaming-chat",
 		func(ctx context.Context, input *ChatRequest, callback core.StreamCallback[string]) (*ChatResponse, error) {
+
+			// [BEGIN] Tool calls detection
+			// Create operation ID for this request
+			operationID := fmt.Sprintf("op_%p", &ctx)
+
+			// Create operation status and register it
+			operation := &OperationStatus{
+				ID:       operationID,
+				Status:   "pending",
+				Continue: make(chan bool, 1),
+			}
+
+			config.OperationsMutex.Lock()
+			(*config.PendingOperations)[operationID] = operation
+			config.OperationsMutex.Unlock()
+
+			// Cleanup operation when done
+			defer func() {
+				config.OperationsMutex.Lock()
+				delete(*config.PendingOperations, operationID)
+				config.OperationsMutex.Unlock()
+				close(operation.Continue)
+			}()
+
+			// Send pending status to client
+			if callback != nil {
+				pendingMsg := fmt.Sprintf(`{"message": "tool detected", "status": "pending", "operation_id": "%s"}`, operationID)
+				if err := callback(ctx, pendingMsg); err != nil {
+					return nil, fmt.Errorf("error sending pending status: %w", err)
+				}
+			}
+
+			log.Printf("⏸️  Operation %s waiting for confirmation...", operationID)
+
+			// Wait for validation or cancellation
+			select {
+			case shouldContinue := <-operation.Continue:
+				if !shouldContinue {
+					log.Printf("❌ Operation %s cancelled by user", operationID)
+					return nil, fmt.Errorf("operation cancelled by user")
+				}
+				log.Printf("✅ Operation %s validated, continuing...", operationID)
+			case <-ctx.Done():
+				log.Printf("⏱️  Operation %s context cancelled", operationID)
+				return nil, ctx.Err()
+			}
+
+			// [END] Tool calls detection
+
+
 
 			// [BEGIN] Similarity search
 			// Retrieve relevant context from the vector store
