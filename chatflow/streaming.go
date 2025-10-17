@@ -90,9 +90,9 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				close(operation.Continue)
 			}()
 
-			// Send pending status to client
+			// Send pending status to client "kind":"tool_call", 
 			if callback != nil {
-				pendingMsg := fmt.Sprintf(`{"message": "tool detected", "status": "pending", "operation_id": "%s"}`, operationID)
+				pendingMsg := fmt.Sprintf(`{"kind":"tool_call", "message": "tool detected", "status": "pending", "operation_id": "%s"}`, operationID)
 				if err := callback(ctx, pendingMsg); err != nil {
 					return nil, fmt.Errorf("error sending pending status: %w", err)
 				}
