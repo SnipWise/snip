@@ -46,13 +46,16 @@ services:
       embedding-model:
         endpoint_var: MODEL_RUNNER_BASE_URL
         model_var: EMBEDDING_MODEL
+      tools-model:
+        endpoint_var: MODEL_RUNNER_BASE_URL
+        model_var: TOOLS_MODEL
 
 models:
   snip-model:
-    model: hf.co/menlo/jan-nano-gguf:q4_k_m
+    #model: hf.co/menlo/jan-nano-gguf:q4_k_m
     #model: hf.co/menlo/lucy-gguf:q4_k_m
     #model: hf.co/qwen/qwen2.5-coder-1.5b-instruct-gguf:q4_k_m
-    #model: hf.co/qwen/qwen2.5-coder-3b-instruct-gguf:q4_k_m
+    model: hf.co/qwen/qwen2.5-coder-3b-instruct-gguf:q4_k_m
     #model: ai/qwen2.5:latest
     context_size: 8192
     runtime_flags:
@@ -60,6 +63,15 @@ models:
         - "0.0"                   # Set temperature to 0.0  
         - "--verbose"
         - "--verbose-prompt"
+  tools-model:
+    model: hf.co/menlo/jan-nano-gguf:q4_k_m
+    context_size: 8192
+    runtime_flags:
+        - "--temp"                # Temperature
+        - "0.0"                   # Set temperature to 0.0  
+        - "--verbose"
+        - "--verbose-prompt"
+
   embedding-model:
     model: ai/mxbai-embed-large:latest
 

@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"dmr-genkit-stream-completion/chatflow"
-	"dmr-genkit-stream-completion/embeddings"
-	"dmr-genkit-stream-completion/helpers"
-	"dmr-genkit-stream-completion/rag"
+	"snip/chatflow"
+	"snip/embeddings"
+	"snip/helpers"
+	"snip/rag"
+	"snip/tools"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -65,10 +66,12 @@ func main() {
 	llmURL := helpers.GetEnvOrDefault("MODEL_RUNNER_BASE_URL", "http://localhost:12434/engines/llama.cpp/v1")
 	snipModel := helpers.GetEnvOrDefault("SNIP_MODEL", "hf.co/menlo/jan-nano-gguf:q4_k_m")
 	embeddingsModel := helpers.GetEnvOrDefault("EMBEDDING_MODEL", "ai/mxbai-embed-large:latest")
+	toolsModel := helpers.GetEnvOrDefault("TOOLS_MODEL", "hf.co/menlo/jan-nano-gguf:q4_k_m")
 
 	fmt.Println("🌍 LLM URL:", llmURL)
-	fmt.Println("🌍 SNIP Model:", snipModel)
-	fmt.Println("🌍 Embeddings Model:", embeddingsModel)
+	fmt.Println("🤖 SNIP Model:", snipModel)
+	fmt.Println("📝 Embeddings Model:", embeddingsModel)
+	fmt.Println("🛠️ Tools Model:", toolsModel)
 
 	g := genkit.Init(ctx, genkit.WithPlugins(&openai.OpenAI{
 		APIKey: "tada",
@@ -94,9 +97,13 @@ func main() {
 
 	messages = append(messages, ai.NewSystemTextMessage(systemInstruction))
 
+	// Register tools once
+	toolsRefs := tools.Catalog(g)
+
 	// Definition of a streaming flow
 	streamingChatFlow := chatflow.DefineStreamingChatFlow(g, chatflow.StreamingChatFlowConfig{
 		SnipModel:          snipModel,
+		ToolsModel:         toolsModel,
 		MemoryRetriever:    memoryRetriever,
 		Messages:           &messages,
 		ActiveCompletions:  &activeCompletions,
@@ -104,6 +111,7 @@ func main() {
 		PendingOperations:  &pendingOperations,
 		OperationsMutex:    &operationsMutex,
 		ContextSizeLimit:   contextSizeLimit,
+		Tools:              toolsRefs,
 		UpdateSimilarities: func(userMessage string, details []embeddings.SimilarityDetail) {
 			similaritiesMutex.Lock()
 			defer similaritiesMutex.Unlock()
@@ -224,6 +232,7 @@ func main() {
 			"status":           "ok",
 			"chat_model":       snipModel,
 			"embeddings_model": embeddingsModel,
+			"tools_model":      toolsModel,
 		})
 	})
 

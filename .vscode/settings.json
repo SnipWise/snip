@@ -52,13 +52,77 @@
     },
     "todohighlight.keywords": [ 
         {
+            "text": "IMPORTANT:",
+            "color": "#ffffff",
+            "backgroundColor": "#EC1818",
+            "border": "1px solid #EC1818",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },        
+        {
+            "text": "STEP 1:",
+            "color": "#ffffff",
+            "backgroundColor": "#27A34F",
+            "border": "1px solid #27A34F",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },
+        {
+            "text": "STEP 2:",
+            "color": "#ffffff",
+            "backgroundColor": "#2887C2",
+            "border": "1px solid #2887C2",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },
+        {
+            "text": "STEP 3:",
+            "color": "#ffffff",
+            "backgroundColor": "#3330C4",
+            "border": "1px solid #3330C4",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },
+        {
+            "text": "STEP 4:",
+            "color": "#ffffff",
+            "backgroundColor": "#7D30C4",
+            "border": "1px solid #7D30C4",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },
+        {
+            "text": "STEP 5:",
+            "color": "#ffffff",
+            "backgroundColor": "#BA30C4",
+            "border": "1px solid #BA30C4",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },
+        {
+            "text": "STEP 6:",
+            "color": "#ffffff",
+            "backgroundColor": "#B91F5F",
+            "border": "1px solid #B91F5F",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },        
+        {
             "text": "[TODO]",
             "color": "#ffffff",
             "backgroundColor": "#0F8E33",
             "border": "1px solid #0F8E33",
             "borderRadius": "3px",
             "isWholeLine": false
-        },      
+        }, 
+        {
+            "text": "[QUESTION]",
+            "color": "#ffffff",
+            "backgroundColor": "#07220E",
+            "border": "1px solid #07220E",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },               
         {
             "text": "[IMPORTANT]",
             "color": "#ffffff",

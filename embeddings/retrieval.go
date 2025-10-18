@@ -2,8 +2,8 @@ package embeddings
 
 import (
 	"context"
-	"dmr-genkit-stream-completion/helpers"
-	"dmr-genkit-stream-completion/rag"
+	"snip/helpers"
+	"snip/rag"
 	"fmt"
 
 	"github.com/firebase/genkit/go/ai"

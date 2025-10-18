@@ -2,9 +2,10 @@ package chatflow
 
 import (
 	"context"
-	"dmr-genkit-stream-completion/embeddings"
+	"encoding/json"
 	"fmt"
 	"log"
+	"snip/embeddings"
 	"strings"
 	"sync"
 
@@ -50,6 +51,7 @@ type OperationStatus struct {
 // StreamingChatFlowConfig holds configuration for the streaming chat flow
 type StreamingChatFlowConfig struct {
 	SnipModel          string
+	ToolsModel         string
 	MemoryRetriever    ai.Retriever
 	Messages           *[]*ai.Message
 	ActiveCompletions  *map[string]context.CancelFunc
@@ -57,7 +59,9 @@ type StreamingChatFlowConfig struct {
 	PendingOperations  *map[string]*OperationStatus
 	OperationsMutex    *sync.RWMutex
 	ContextSizeLimit   int
+	Tools              []ai.ToolRef
 	UpdateSimilarities UpdateSimilaritiesFunc
+	//Genkit             *genkit.Genkit
 }
 
 // DefineStreamingChatFlow creates and returns a streaming chat flow
@@ -90,32 +94,142 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				close(operation.Continue)
 			}()
 
-			// Send pending status to client "kind":"tool_call", 
-			if callback != nil {
-				pendingMsg := fmt.Sprintf(`{"kind":"tool_call", "message": "tool detected", "status": "pending", "operation_id": "%s"}`, operationID)
-				if err := callback(ctx, pendingMsg); err != nil {
-					return nil, fmt.Errorf("error sending pending status: %w", err)
+			// MEMORY:
+			// STEP 1: Initialize conversation history, system message, and user message
+			history := []*ai.Message{}
+
+			// Create system message
+			systemMsg := ``
+
+			// STEP 2: Initialize loop control variables
+			stopped := false           // Controls the conversation loop
+			lastAssistantMessage := "" // Final AI message
+
+			// STEP 3: Start the conversation loop
+			// To avoid repeating the first user message in the history
+			// we add it here before entering the loop and using prompt
+			history = append(history, ai.NewUserTextMessage(input.Message))
+
+			totalOfToolsCalls := 0
+
+			// ai.NewUserTextMessage(input.Message)
+			for !stopped {
+
+				resp, err := genkit.Generate(ctx, g,
+					ai.WithModelName("openai/"+config.ToolsModel),
+					ai.WithSystem(systemMsg),
+					// WithMessages sets the messages. These messages will be sandwiched between the system and user prompts.
+					ai.WithMessages(history...),
+					//ai.WithPrompt(userMsg),
+					ai.WithTools(config.Tools...),
+					ai.WithToolChoice(ai.ToolChoiceAuto),
+					ai.WithReturnToolRequests(true),
+				)
+
+				if err != nil {
+					fmt.Printf("🔴 [tools] Error: %v\n", err)
+				}
+
+				// We do not use parallel tool calls
+				toolRequests := resp.ToolRequests()
+				if len(toolRequests) == 0 {
+					// No tool requests, we are done
+					stopped = true // Exit the loop
+					lastAssistantMessage = resp.Text()
+					break // Exit the loop now
+				}
+
+				fmt.Println("✋ Number of tool requests", len(toolRequests))
+
+				totalOfToolsCalls += len(toolRequests)
+
+				// IMPORTANT: Add the assistant's message with tool requests to history
+				// This ensures the model knows it already proposed these tools
+				history = append(history, resp.Message)
+
+				for _, req := range toolRequests {
+					tool := genkit.LookupTool(g, req.Name)
+
+					fmt.Println("🛠️ Tool request:", req.Name, req.Ref, req.Input)
+
+					if tool == nil {
+						log.Fatalf("tool %q not found", req.Name)
+					}
+
+					// Send pending status to client "kind":"tool_call",
+					if callback != nil {
+
+						inputJSON, err := json.Marshal(req.Input)
+						if err != nil {
+							return nil, fmt.Errorf("error marshaling tool input: %w", err)
+						}
+						inputJsonString := string(inputJSON)
+						result := strings.ReplaceAll(inputJsonString, `"`, "")
+
+
+						message := fmt.Sprintf("tool: %s %s", req.Name, result)
+						//message := fmt.Sprintf("tool: %s", req.Name)
+						pendingMsg := fmt.Sprintf(`{"kind":"tool_call", "message":"%s" , "status": "pending", "operation_id": "%s"}`, message, operationID)
+						if err := callback(ctx, pendingMsg); err != nil {
+							return nil, fmt.Errorf("error sending pending status: %w", err)
+						}
+					}
+
+					log.Printf("⏸️  Operation %s waiting for confirmation...", operationID)
+
+					// Wait for validation or cancellation
+					select {
+					case shouldContinue := <-operation.Continue:
+						if !shouldContinue {
+							log.Printf("❌ Operation %s cancelled by user", operationID)
+							return nil, fmt.Errorf("operation cancelled by user")
+						}
+						log.Printf("✅ Operation %s validated, continuing...", operationID)
+						output, err := tool.RunRaw(ctx, req.Input)
+						if err != nil {
+							log.Fatalf("tool %q execution failed: %v", tool.Name(), err)
+						}
+						fmt.Println("🤖 Result:", output)
+
+						part := ai.NewToolResponsePart(&ai.ToolResponse{
+							Name:   req.Name,
+							Ref:    req.Ref,
+							Output: output,
+						})
+						fmt.Println("✅", output)
+						history = append(history, ai.NewMessage(ai.RoleTool, nil, part))
+
+					case <-ctx.Done():
+						log.Printf("⏱️  Operation %s context cancelled", operationID)
+						return nil, ctx.Err()
+					}
+
+					fmt.Println(strings.Repeat("-", 20))
+					fmt.Println("📜 History now has", len(history), "messages")
+					fmt.Println(strings.Repeat("-", 20))
+
 				}
 			}
 
-			log.Printf("⏸️  Operation %s waiting for confirmation...", operationID)
+			if totalOfToolsCalls > 0 {
+				fmt.Println(strings.Repeat("+", 20))
+				fmt.Println("🛠️ Total of tool calls made:", totalOfToolsCalls)
+				fmt.Println(strings.Repeat("+", 20))
+				fmt.Println("🎉 Final response:\n", lastAssistantMessage)
+				fmt.Println(strings.Repeat("+", 20))
 
-			// Wait for validation or cancellation
-			select {
-			case shouldContinue := <-operation.Continue:
-				if !shouldContinue {
-					log.Printf("❌ Operation %s cancelled by user", operationID)
-					return nil, fmt.Errorf("operation cancelled by user")
-				}
-				log.Printf("✅ Operation %s validated, continuing...", operationID)
-			case <-ctx.Done():
-				log.Printf("⏱️  Operation %s context cancelled", operationID)
-				return nil, ctx.Err()
+				// [QUESTION]: assistant or system?
+				// [TODO]: Check role
+				// [TODO]: only if tool calls were made IMPORTANT:
+
+				//*config.Messages = append(*config.Messages, ai.NewTextMessage("assistant", lastAssistantMessage))
+				*config.Messages = append(*config.Messages, ai.NewTextMessage(
+					"system",
+					"TOOL CALLS RESULTS\n"+lastAssistantMessage+"\nEND OF TOOL CALLS RESULTS",
+				))
 			}
 
 			// [END] Tool calls detection
-
-
 
 			// [BEGIN] Similarity search
 			// Retrieve relevant context from the vector store
@@ -140,7 +254,7 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 
 			// Debug: Print conversation state
 			for i, msg := range *config.Messages {
-				log.Printf("  [%d] %s: %+v", i, msg.Role, msg.Content)
+				log.Printf("🟦  [%d] %s: %+v", i, msg.Role, msg.Content)
 			}
 
 			// Create a cancellable context for this completion
@@ -160,7 +274,11 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				delete(*config.ActiveCompletions, completionID)
 				config.CompletionsMutex.Unlock()
 			}()
-			
+
+			fmt.Println()
+			fmt.Println(strings.Repeat("=", 80))
+			fmt.Println()
+
 			// [BEGIN] Stream Completion
 			fullResponse, err := genkit.Generate(completionCtx, g,
 				ai.WithModelName("openai/"+config.SnipModel),

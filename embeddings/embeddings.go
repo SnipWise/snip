@@ -2,8 +2,8 @@ package embeddings
 
 import (
 	"context"
-	"dmr-genkit-stream-completion/helpers"
-	"dmr-genkit-stream-completion/rag"
+	"snip/helpers"
+	"snip/rag"
 	"encoding/json"
 	"fmt"
 	"os"
