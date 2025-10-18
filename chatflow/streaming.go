@@ -225,8 +225,11 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				//*config.Messages = append(*config.Messages, ai.NewTextMessage("assistant", lastAssistantMessage))
 				*config.Messages = append(*config.Messages, ai.NewTextMessage(
 					"system",
-					"TOOL CALLS RESULTS\n"+lastAssistantMessage+"\nEND OF TOOL CALLS RESULTS",
+					lastAssistantMessage,
+
+					//"TOOL CALLS RESULTS\n"+lastAssistantMessage+"\nEND OF TOOL CALLS RESULTS",
 				))
+				// [NOTE] or create n new tool messages?
 			}
 
 			// [END] Tool calls detection
