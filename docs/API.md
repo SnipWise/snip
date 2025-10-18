@@ -85,7 +85,115 @@ curl -X GET http://localhost:3500/similarities
 
 ---
 
-### 3. POST /completion/stop
+### 3. POST /operation/validate
+
+Validates a pending operation and allows the stream to continue.
+
+**Request:**
+```bash
+curl -X POST http://localhost:3500/operation/validate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operation_id": "op_0x14000102300"
+  }'
+```
+
+**Request Body:**
+```json
+{
+  "operation_id": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "operation_id": "op_0x14000102300",
+  "message": "Operation validated and continued"
+}
+```
+
+**Behavior:**
+- Marks the operation as `validated`
+- Allows the streaming completion to continue
+- Used when you want to approve and proceed with the operation
+
+---
+
+### 4. POST /operation/cancel
+
+Cancels a pending operation but allows the stream to continue.
+
+**Request:**
+```bash
+curl -X POST http://localhost:3500/operation/cancel \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operation_id": "op_0x14000102300"
+  }'
+```
+
+**Request Body:**
+```json
+{
+  "operation_id": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "operation_id": "op_0x14000102300",
+  "message": "Operation cancelled but stream continues"
+}
+```
+
+**Behavior:**
+- Marks the operation as `cancelled`
+- Allows the streaming completion to continue despite cancellation
+- Used when you want to reject the operation but still see the response
+
+---
+
+### 5. POST /operation/reset
+
+Resets a pending operation and stops the stream completely.
+
+**Request:**
+```bash
+curl -X POST http://localhost:3500/operation/reset \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operation_id": "op_0x14000102300"
+  }'
+```
+
+**Request Body:**
+```json
+{
+  "operation_id": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "operation_id": "op_0x14000102300",
+  "message": "Operation reset and stopped"
+}
+```
+
+**Behavior:**
+- Marks the operation as `reset`
+- Stops the streaming completion immediately
+- Used when you want to completely abort the operation
+
+---
+
+### 6. POST /completion/stop
 
 Stops all active completion requests.
 
@@ -105,7 +213,7 @@ curl -X POST http://localhost:3500/completion/stop
 
 ---
 
-### 4. POST /memory/reset
+### 7. POST /memory/reset
 
 Resets the conversation memory, keeping only the system message.
 
@@ -124,7 +232,7 @@ curl -X POST http://localhost:3500/memory/reset
 
 ---
 
-### 5. GET /memory/messages/list
+### 8. GET /memory/messages/list
 
 Retrieves the current conversation history.
 
@@ -153,7 +261,7 @@ curl -X GET http://localhost:3500/memory/messages/list
 
 ---
 
-### 6. GET /memory/messages/tokens
+### 9. GET /memory/messages/tokens
 
 Calculates and returns the total token count of the conversation history.
 
@@ -179,7 +287,7 @@ curl -X GET http://localhost:3500/memory/messages/tokens
 
 ---
 
-### 7. GET /models
+### 10. GET /models
 
 Returns information about the configured models.
 
@@ -199,7 +307,7 @@ curl -X GET http://localhost:3500/models
 
 ---
 
-### 8. GET /health
+### 11. GET /health
 
 Health check endpoint.
 
@@ -234,24 +342,57 @@ The API can be configured using environment variables:
 
 ---
 
-## Workflow Example
+## Operation Control Workflow
+
+When a completion request is initiated, it enters a pending state and waits for user confirmation. You have three options:
+
+### Option 1: Validate (approve and continue)
+```bash
+# Extract operation_id from the streaming response
+./validate.sh op_0x14000102300
+```
+
+### Option 2: Cancel (reject but continue anyway)
+```bash
+# The stream continues but marked as cancelled
+./cancel.sh op_0x14000102300
+```
+
+### Option 3: Reset (abort completely)
+```bash
+# Stops the stream immediately
+./reset.sh op_0x14000102300
+```
+
+---
+
+## Complete Workflow Example
 
 ```bash
-# 1. Send a completion request
+# 1. Send a completion request (will pause and wait for confirmation)
 curl -X POST http://localhost:3500/completion \
   -H "Content-Type: application/json" \
+  -H "Accept: text/event-stream" \
   -d '{"message": "Show me file I/O examples"}'
 
-# 2. Get the similarity results
+# Response will include:
+# data: {"message": "tool detected", "status": "pending", "operation_id": "op_0x14000102300"}
+
+# 2. Validate the operation to continue
+curl -X POST http://localhost:3500/operation/validate \
+  -H "Content-Type: application/json" \
+  -d '{"operation_id": "op_0x14000102300"}'
+
+# 3. Get the similarity results
 curl -X GET http://localhost:3500/similarities | jq '.'
 
-# 3. Check conversation history
+# 4. Check conversation history
 curl -X GET http://localhost:3500/memory/messages/list | jq '.'
 
-# 4. Check token usage
+# 5. Check token usage
 curl -X GET http://localhost:3500/memory/messages/tokens | jq '.'
 
-# 5. Reset memory when needed
+# 6. Reset memory when needed
 curl -X POST http://localhost:3500/memory/reset
 ```
 

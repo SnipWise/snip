@@ -1,4 +1,4 @@
-module dmr-genkit-stream-completion
+module snip
 
 go 1.25.2
 
