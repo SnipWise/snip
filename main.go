@@ -2,16 +2,16 @@ package main
 
 import (
 	"context"
-	"snip/chatflow"
-	"snip/embeddings"
-	"snip/helpers"
-	"snip/rag"
-	"snip/tools"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"snip/chatflow"
+	"snip/embeddings"
+	"snip/helpers"
+	"snip/rag"
+	"snip/tools"
 	"sync"
 
 	"github.com/firebase/genkit/go/ai"
@@ -19,6 +19,8 @@ import (
 	"github.com/firebase/genkit/go/plugins/compat_oai/openai"
 	"github.com/firebase/genkit/go/plugins/server"
 	"github.com/openai/openai-go/option"
+
+	"github.com/firebase/genkit/go/plugins/mcp"
 )
 
 // ConversationMessage represents a single message in conversation history
@@ -80,6 +82,18 @@ func main() {
 		},
 	}))
 
+	mcpClient, err := mcp.NewGenkitMCPClient(mcp.MCPClientOptions{
+		Name: "snip", // docker-mcp-gateway		
+		StreamableHTTP: &mcp.StreamableHTTPConfig{
+			BaseURL: helpers.GetEnvOrDefault("MCP_SERVER_BASE_URL", "http://localhost:9011"),
+		},
+	})
+
+	if err != nil {
+		fmt.Println("😡 Error connecting Docker MCP Gateway:", err)
+		os.Exit(1)
+	}
+
 	embedder, store, err := embeddings.Generate(ctx, llmURL, embeddingsModel)
 	if err != nil {
 		fmt.Println("😡 Error generating embeddings:", err)
@@ -90,28 +104,28 @@ func main() {
 	fmt.Println("✅ Embeddings generated and vector store ready with", len(store.Records), "records")
 
 	// [IMPORTANT] only for testing and checking
-	fmt.Println("🚧 Example record:")
-	fmt.Println(store.Records["9ce717f4-53ee-40f1-ac62-a3e0c55f67e4"].Prompt)
+	// fmt.Println("🚧 Example record:")
+	// fmt.Println(store.Records["9ce717f4-53ee-40f1-ac62-a3e0c55f67e4"].Prompt)
 
 	systemInstruction := helpers.GetEnvOrDefault("SYSTEM_INSTRUCTION", "You are a helpful AI assistant.")
 
 	messages = append(messages, ai.NewSystemTextMessage(systemInstruction))
 
 	// Register tools once
-	toolsRefs := tools.Catalog(g)
+	toolsRefs := tools.Catalog(ctx, g, mcpClient)
 
 	// Definition of a streaming flow
 	streamingChatFlow := chatflow.DefineStreamingChatFlow(g, chatflow.StreamingChatFlowConfig{
-		SnipModel:          snipModel,
-		ToolsModel:         toolsModel,
-		MemoryRetriever:    memoryRetriever,
-		Messages:           &messages,
-		ActiveCompletions:  &activeCompletions,
-		CompletionsMutex:   &completionsMutex,
-		PendingOperations:  &pendingOperations,
-		OperationsMutex:    &operationsMutex,
-		ContextSizeLimit:   contextSizeLimit,
-		Tools:              toolsRefs,
+		SnipModel:         snipModel,
+		ToolsModel:        toolsModel,
+		MemoryRetriever:   memoryRetriever,
+		Messages:          &messages,
+		ActiveCompletions: &activeCompletions,
+		CompletionsMutex:  &completionsMutex,
+		PendingOperations: &pendingOperations,
+		OperationsMutex:   &operationsMutex,
+		ContextSizeLimit:  contextSizeLimit,
+		Tools:             toolsRefs,
 		UpdateSimilarities: func(userMessage string, details []embeddings.SimilarityDetail) {
 			similaritiesMutex.Lock()
 			defer similaritiesMutex.Unlock()
