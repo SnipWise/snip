@@ -7,6 +7,9 @@ import (
 
 func dotProduct(v1 []float32, v2 []float32) float64 {
 	// Calculate the dot product of two vectors
+	if len(v1) != len(v2) {
+		return 0.0
+	}
 	sum := 0.0
 	for i := range v1 {
 		sum += float64(v1[i]) * float64(v2[i])
