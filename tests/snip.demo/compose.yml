@@ -1,0 +1,125 @@
+services:
+  snip-agent:
+    tty: true
+    stdin_open: true
+    image: k33g/snip:0.0.0
+
+    ports:
+      - 3500:8080
+
+    environment:
+      SYSTEM_INSTRUCTION: |
+        You are Snip, an AI assistant that helps users write and understand code snippets.
+        You provide concise explanations, code examples, and best practices for various programming tasks.
+        Always aim to be clear, helpful, and accurate in your responses.
+        IMPORTANT: When providing code examples, concentrate carefully on syntax accuracy:
+        - Close all string quotes properly (" or ')
+        - Add semicolons (;) where needed
+        - Balance all brackets/parentheses
+        - Complete all statements
+        - Verify syntax is valid
+        Provide only well-formed, executable examples. Double-check before responding.
+
+      HTTP_PORT: 8080
+
+      SNIPPETS_FOLDER: snippets
+      SIMILARITY_THRESHOLD: 0.65
+      SIMILARITY_MAX_RESULTS: 5
+
+      CONTEXT_SIZE_LIMIT: 8192
+
+      MCP_SERVER_BASE_URL: http://mcp-gateway:9011
+
+
+    volumes:
+      - ./data/snippets:/app/snippets
+
+    models:
+      snip-model:
+        endpoint_var: MODEL_RUNNER_BASE_URL
+        model_var: SNIP_MODEL
+      embedding-model:
+        endpoint_var: MODEL_RUNNER_BASE_URL
+        model_var: EMBEDDING_MODEL
+      tools-model:
+        endpoint_var: MODEL_RUNNER_BASE_URL
+        model_var: TOOLS_MODEL
+
+    depends_on:
+      mcp-gateway:
+        condition: service_started
+        
+  mcp-gateway:
+    # mcp-gateway secures your MCP servers
+    image: docker/mcp-gateway:latest
+    ports:
+      - 9011:9011
+    use_api_socket: true
+    command:
+      - --port=9011
+      - --transport=streaming
+      - --verbose
+      - --catalog=/mcp/catalog.yaml
+      - --servers=mcp-files
+    configs:
+      - source: catalog.yaml
+        target:
+          /mcp/catalog.yaml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      mcp-files:
+        condition: service_healthy
+
+  mcp-files:
+    image: k33g/mcp-files-server:0.0.0
+    environment:
+      - MCP_HTTP_PORT=6060
+      - LOCAL_WORKSPACE_FOLDER=/app/workspace
+    volumes:
+      - ./workspace:/app/workspace
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:6060/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+
+configs:
+  catalog.yaml:
+    content: |
+      registry:
+
+        mcp-files:
+          remote:
+            url: "http://mcp-files:6060/mcp"
+            transport_type: http
+
+
+models:
+  snip-model:
+    #model: hf.co/menlo/jan-nano-gguf:q4_k_m
+    model: hf.co/menlo/lucy-gguf:q4_k_m
+    #model: hf.co/qwen/qwen2.5-coder-1.5b-instruct-gguf:q4_k_m
+    #model: hf.co/qwen/qwen2.5-coder-3b-instruct-gguf:q4_k_m
+    #model: ai/qwen2.5:latest
+    context_size: 8192
+    runtime_flags:
+        - "--temp"                # Temperature
+        - "0.0"                   # Set temperature to 0.0  
+        - "--verbose"
+        - "--verbose-prompt"
+
+  tools-model:
+    model: hf.co/menlo/jan-nano-gguf:q4_k_m
+    context_size: 8192
+    runtime_flags:
+        - "--temp"                # Temperature
+        - "0.0"                   # Set temperature to 0.0  
+        - "--verbose"
+        - "--verbose-prompt"
+
+  embedding-model:
+    model: ai/mxbai-embed-large:latest
+

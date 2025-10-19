@@ -301,7 +301,8 @@ curl -X GET http://localhost:3500/models
 {
   "status": "ok",
   "chat_model": "hf.co/menlo/jan-nano-gguf:q4_k_m",
-  "embeddings_model": "ai/mxbai-embed-large:latest"
+  "embeddings_model": "ai/mxbai-embed-large:latest",
+  "tools_model": "hf.co/menlo/jan-nano-gguf:q4_k_m"
 }
 ```
 
@@ -334,11 +335,13 @@ The API can be configured using environment variables:
 | `HTTP_PORT` | `3500` | HTTP server port |
 | `MODEL_RUNNER_BASE_URL` | `http://localhost:12434/engines/llama.cpp/v1` | LLM API base URL |
 | `SNIP_MODEL` | `hf.co/menlo/jan-nano-gguf:q4_k_m` | Chat completion model |
+| `TOOLS_MODEL` | `hf.co/menlo/jan-nano-gguf:q4_k_m` | Model for tool calls detection and execution |
 | `EMBEDDING_MODEL` | `ai/mxbai-embed-large:latest` | Embeddings model for vector search |
 | `SIMILARITY_THRESHOLD` | `0.5` | Minimum similarity score (0.0-1.0) |
 | `SIMILARITY_MAX_RESULTS` | `3` | Maximum number of similar documents to retrieve |
 | `CONTEXT_SIZE_LIMIT` | `3000` | Maximum tokens in conversation context |
 | `SYSTEM_INSTRUCTION` | `You are a helpful AI assistant.` | System prompt |
+| `MCP_SERVER_BASE_URL` | `http://localhost:9011` | MCP Gateway server base URL for tool integration |
 
 ---
 
