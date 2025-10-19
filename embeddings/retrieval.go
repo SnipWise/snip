@@ -42,7 +42,7 @@ func RetrieveSimilarDocuments(ctx context.Context, query string, retriever ai.Re
 	similarDocuments := ""
 	details := make([]SimilarityDetail, 0, len(retrieveResponse.Documents))
 
-	fmt.Printf("\nFound %d similar documents:\n", len(retrieveResponse.Documents))
+	fmt.Printf("\n📘 Found %d similar documents:\n", len(retrieveResponse.Documents))
 	for i, doc := range retrieveResponse.Documents {
 		similarity := doc.Metadata["cosine_similarity"].(float64)
 		id := doc.Metadata["id"].(string)
