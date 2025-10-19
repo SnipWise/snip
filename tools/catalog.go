@@ -1,90 +1,83 @@
 package tools
 
 import (
-	"strings"
-	"time"
+	"context"
+	"fmt"
+	"os"
 
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
-	"math/rand"
+	"github.com/firebase/genkit/go/plugins/mcp"
 )
 
-type DiceRollInput struct {
-	NumDice  int `json:"num_dice"`
-	NumFaces int `json:"num_faces"`
+type ListToolsInput struct{}
+
+type ToolInfo struct {
+	Name        string         `json:"name"`
+	Description string         `json:"description"`
+	Parameters  map[string]any `json:"parameters,omitempty"`
 }
 
-type DiceRollResult struct {
-	Rolls []int `json:"rolls"`
-	Total int   `json:"total"`
-}
-
-type CharacterNameInput struct {
-	Race string `json:"race"`
-}
-
-type CharacterNameResult struct {
-	Name string `json:"name"`
-	Race string `json:"race"`
+type ListToolsResult struct {
+	Tools []ToolInfo `json:"tools"`
+	Count int        `json:"count"`
 }
 
 // [NOTE]: this is a work-in-progress
-func Catalog(g *genkit.Genkit) []ai.ToolRef {
-	// Define tools
-	diceRollTool := genkit.DefineTool(g, "roll_dice", "Roll n dice with n faces each",
-		func(ctx *ai.ToolContext, input DiceRollInput) (DiceRollResult, error) {
-			return rollDice(input.NumDice, input.NumFaces), nil
+func Catalog(ctx context.Context, g *genkit.Genkit, mcpClient *mcp.GenkitMCPClient) []ai.ToolRef {
+
+	toolsList, err := mcpClient.GetActiveTools(ctx, g)
+
+	if err != nil {
+		fmt.Println("😡 Error getting the tools list:", err)
+		os.Exit(1)
+	}
+	fmt.Println("🟢 MCP 🛠️ Retrieved", len(toolsList), "active tools from MCP Gateway")
+
+	// Keep MCP tools as ai.Tool (don't convert to ToolRef)
+	// This preserves the RunRaw() method needed for execution
+	toolRefs := make([]ai.ToolRef, 0, len(toolsList)+1)
+
+	// Add MCP tools directly (ai.Tool implements ai.ToolRef)
+	for _, tool := range toolsList {
+		toolRefs = append(toolRefs, tool)
+	}
+
+	// Define list_tools tool (needs access to toolRefs, so we define it after MCP tools are added)
+	listToolsTool := genkit.DefineTool(g, "list_tools", "List all available tools with their descriptions and parameters",
+		func(ctx *ai.ToolContext, input ListToolsInput) (ListToolsResult, error) {
+			return listTools(toolRefs), nil
 		},
 	)
 
-	characterNameTool := genkit.DefineTool(g, "generate_character_name", "Generate a D&D character name for a specific race",
-		func(ctx *ai.ToolContext, input CharacterNameInput) (CharacterNameResult, error) {
-			return generateCharacterName(input.Race), nil
-		},
-	)
+	// Append locally defined tools
+	toolRefs = append(toolRefs, listToolsTool)
 
-	return []ai.ToolRef{diceRollTool, characterNameTool}
+	return toolRefs
 }
 
-func rollDice(numDice, numFaces int) DiceRollResult {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	rolls := make([]int, numDice)
-	total := 0
+func listTools(toolRefs []ai.ToolRef) ListToolsResult {
+	tools := make([]ToolInfo, 0, len(toolRefs))
 
-	for i := 0; i < numDice; i++ {
-		roll := r.Intn(numFaces) + 1
-		rolls[i] = roll
-		total += roll
+	for _, toolRef := range toolRefs {
+		toolInfo := ToolInfo{
+			Name: toolRef.Name(),
+		}
+
+		// Try to get full tool definition if available
+		if tool, ok := toolRef.(ai.Tool); ok {
+			def := tool.Definition()
+			if def != nil {
+				toolInfo.Description = def.Description
+				toolInfo.Parameters = def.InputSchema
+			}
+		}
+
+		tools = append(tools, toolInfo)
 	}
 
-	return DiceRollResult{
-		Rolls: rolls,
-		Total: total,
-	}
-}
-
-func generateCharacterName(race string) CharacterNameResult {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	namesByRace := map[string][]string{
-		"elf":      {"Aerdrie", "Ahvonna", "Aramil", "Aranea", "Berrian", "Caelynn", "Carric", "Dayereth", "Enna", "Galinndan"},
-		"dwarf":    {"Adrik", "Baern", "Darrak", "Eberk", "Fargrim", "Gardain", "Harbek", "Kildrak", "Morgran", "Thorek"},
-		"human":    {"Aerdrie", "Aramil", "Berris", "Cithreth", "Dayereth", "Enna", "Galinndan", "Hadarai", "Immeral", "Lamlis"},
-		"halfling": {"Alton", "Ander", "Bernie", "Bobbin", "Cade", "Callus", "Corrin", "Dannad", "Garret", "Lindal"},
-		"orc":      {"Gash", "Gell", "Henk", "Holg", "Imsh", "Keth", "Krusk", "Mhurren", "Ront", "Shump"},
-		"tiefling": {"Akmenos", "Amnon", "Barakas", "Damakos", "Ekemon", "Iados", "Kairon", "Leucis", "Melech", "Mordai"},
-	}
-
-	raceLower := strings.ToLower(race)
-	names, exists := namesByRace[raceLower]
-	if !exists {
-		names = namesByRace["human"] // Default to human names
-	}
-
-	selectedName := names[r.Intn(len(names))]
-
-	return CharacterNameResult{
-		Name: selectedName,
-		Race: race,
+	return ListToolsResult{
+		Tools: tools,
+		Count: len(tools),
 	}
 }
