@@ -12,6 +12,7 @@ import (
 	"snip/helpers"
 	"snip/rag"
 	"snip/tools"
+	"snip/watcher"
 	"sync"
 
 	"github.com/firebase/genkit/go/ai"
@@ -102,6 +103,13 @@ func main() {
 	// Create the memory vector retriever
 	memoryRetriever := rag.DefineMemoryVectorRetriever(g, &store, embedder)
 	fmt.Println("✅ Embeddings generated and vector store ready with", len(store.Records), "records")
+
+	// Start file watcher for automatic embedding generation
+	snippetsFolder := helpers.GetEnvOrDefault("SNIPPETS_FOLDER", "./snippets")
+	if err := watcher.StartFileWatcher(ctx, snippetsFolder, embedder, &store, g); err != nil {
+		fmt.Println("⚠️  Warning: Failed to start file watcher:", err)
+		// Don't exit, just log the warning and continue without the watcher
+	}
 
 	// [IMPORTANT] only for testing and checking
 	// fmt.Println("🚧 Example record:")
