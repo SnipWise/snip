@@ -98,26 +98,24 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 			// STEP 1: Initialize conversation history, system message, and user message
 			history := []*ai.Message{}
 
-			// Create system message
-			systemMsg := ``
 
 			// STEP 2: Initialize loop control variables
 			stopped := false           // Controls the conversation loop
-			lastAssistantMessage := "" // Final AI message
+			lastToolAssistantMessage := "" // Final AI message from the tool model, in theory, we do not use it
+			
+			totalOfToolsCalls := 0
+			toolCallsResults := ""
 
 			// STEP 3: Start the conversation loop
 			// To avoid repeating the first user message in the history
 			// we add it here before entering the loop and using prompt
 			history = append(history, ai.NewUserTextMessage(input.Message))
 
-			totalOfToolsCalls := 0
-
-			// ai.NewUserTextMessage(input.Message)
+			// [TOOLS] Detection
 			for !stopped {
 
 				resp, err := genkit.Generate(ctx, g,
 					ai.WithModelName("openai/"+config.ToolsModel),
-					ai.WithSystem(systemMsg),
 					// WithMessages sets the messages. These messages will be sandwiched between the system and user prompts.
 					ai.WithMessages(history...),
 					//ai.WithPrompt(userMsg),
@@ -135,7 +133,7 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				if len(toolRequests) == 0 {
 					// No tool requests, we are done
 					stopped = true // Exit the loop
-					lastAssistantMessage = resp.Text()
+					lastToolAssistantMessage = resp.Text()
 					break // Exit the loop now
 				}
 
@@ -143,7 +141,7 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 
 				totalOfToolsCalls += len(toolRequests)
 
-				// IMPORTANT: Add the assistant's message with tool requests to history
+				// [IMPORTANT]: Add the assistant's message with tool requests to history
 				// This ensures the model knows it already proposed these tools
 				history = append(history, resp.Message)
 
@@ -168,11 +166,13 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 
 
 						message := fmt.Sprintf("tool: %s %s", req.Name, result)
-						//message := fmt.Sprintf("tool: %s", req.Name)
+						// [NOTE]: this JSON payload will be sent to the client (VSCode Extension)
 						pendingMsg := fmt.Sprintf(`{"kind":"tool_call", "message":"%s" , "status": "pending", "operation_id": "%s"}`, message, operationID)
 						if err := callback(ctx, pendingMsg); err != nil {
 							return nil, fmt.Errorf("error sending pending status: %w", err)
 						}
+						// [IMPORTANT]: log tool call
+						toolCallsResults += fmt.Sprintf("### Tool call: %s Input: %s:\n", req.Name, inputJsonString)
 					}
 
 					log.Printf("⏸️  Operation %s waiting for confirmation...", operationID)
@@ -190,6 +190,8 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 							log.Fatalf("tool %q execution failed: %v", tool.Name(), err)
 						}
 						fmt.Println("🤖 Result:", output)
+						// [IMPORTANT]: log tool call results
+						toolCallsResults += fmt.Sprintf("Result: %v\n", output)
 
 						part := ai.NewToolResponsePart(&ai.ToolResponse{
 							Name:   req.Name,
@@ -205,7 +207,7 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 					}
 
 					fmt.Println(strings.Repeat("-", 20))
-					fmt.Println("📜 History now has", len(history), "messages")
+					fmt.Println("📜 Tools History now has", len(history), "messages")
 					fmt.Println(strings.Repeat("-", 20))
 
 				}
@@ -215,21 +217,19 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				fmt.Println(strings.Repeat("+", 20))
 				fmt.Println("🛠️ Total of tool calls made:", totalOfToolsCalls)
 				fmt.Println(strings.Repeat("+", 20))
-				fmt.Println("🎉 Final response:\n", lastAssistantMessage)
+				fmt.Println("🎉 Final response from the tools model:\n", lastToolAssistantMessage)
 				fmt.Println(strings.Repeat("+", 20))
 
-				// [QUESTION]: assistant or system?
-				// [TODO]: Check role
-				// [TODO]: only if tool calls were made IMPORTANT:
+				fmt.Println(strings.Repeat("*", 20))
+				fmt.Println("🧮 Results:\n", toolCallsResults)
+				fmt.Println(strings.Repeat("*", 20))
 
-				//*config.Messages = append(*config.Messages, ai.NewTextMessage("assistant", lastAssistantMessage))
+				// [IMPORTANT]: Add tool calls results to the conversation messages for the main model
+
 				*config.Messages = append(*config.Messages, ai.NewTextMessage(
 					"system",
-					lastAssistantMessage,
-
-					//"TOOL CALLS RESULTS\n"+lastAssistantMessage+"\nEND OF TOOL CALLS RESULTS",
+					toolCallsResults,
 				))
-				// [NOTE] or create n new tool messages?
 			}
 
 			// [END] Tool calls detection
