@@ -4,3 +4,5 @@
 ```bash
 docker pull k33g/snip:0.0.0
 ```
+
+The Vectore Store is re-built at each startup from the snippets in the `snippets` folder. 
