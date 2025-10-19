@@ -138,7 +138,15 @@
             "border": "1px solid #336AB6",
             "borderRadius": "3px",
             "isWholeLine": false
-        },    
+        },   
+        {
+            "text": "[TOOLS]",
+            "color": "#ffffff",
+            "backgroundColor": "#4EBCE1",
+            "border": "1px solid #4EBCE1",
+            "borderRadius": "3px",
+            "isWholeLine": false
+        },           
         {
             "text": "[BEGIN]",
             "color": "#ffffff",
