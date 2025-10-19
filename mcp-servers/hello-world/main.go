@@ -12,16 +12,6 @@ import (
 	"github.com/mark3labs/mcp-go/server"
 )
 
-type Pizzeria struct {
-	Name        string `json:"name"`
-	City        string `json:"city"`
-	Country     string `json:"country,omitempty"`
-	Address     string `json:"address"`
-	Website     string `json:"website"`
-	Phone       string `json:"phone"`
-	Specialty   string `json:"specialty"`
-	Description string `json:"description"`
-}
 
 func main() {
 
