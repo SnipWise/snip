@@ -39,6 +39,11 @@ func detectAndExecuteToolCalls(
 		fmt.Println("   -", t.Name())
 	}
 
+	fmt.Println("🟧🟠 Initial conversation history:")
+	for _, message := range history {
+		fmt.Printf("   - History Message - Role: %s, Text: %s\n", message.Role, message.Text())
+	}
+
 	for !stopped {
 		fmt.Printf("\n🔄 Tool detection loop iteration - Current history length: %d\n", len(history))
 		
