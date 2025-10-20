@@ -51,6 +51,7 @@ type OperationStatus struct {
 type StreamingChatFlowConfig struct {
 	SnipModel          string
 	ToolsModel         string
+	ToolsSystemInstruction string
 	MemoryRetriever    ai.Retriever
 	Messages           *[]*ai.Message
 	ActiveCompletions  *map[string]context.CancelFunc
@@ -95,6 +96,7 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 
 			// Initialize conversation history
 			history := []*ai.Message{}
+			history = append(history, ai.NewSystemTextMessage(config.ToolsSystemInstruction))
 			history = append(history, ai.NewUserTextMessage(input.Message))
 
 			// Execute tool calls detection and execution

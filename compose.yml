@@ -27,6 +27,9 @@ services:
         - Verify syntax is valid
         Provide only well-formed, executable examples. Double-check before responding.
 
+      TOOLS_MODEL_INSTRUCTION: |
+        Use the available tools to assist users with their coding queries.
+        When a user asks a question, determine if any tools can help provide a better answer.
 
       HTTP_PORT: 8080
 
@@ -69,7 +72,7 @@ services:
       - --transport=streaming
       - --verbose
       - --catalog=/mcp/catalog.yaml
-      - --servers=mcp-fancy-names,mcp-hello-world,mcp-dnd
+      - --servers=mcp-fancy-names,mcp-hello-world,mcp-dnd,mcp-rag
     configs:
       - source: catalog.yaml
         target:
@@ -83,6 +86,35 @@ services:
         condition: service_healthy
       mcp-dnd:
         condition: service_healthy
+      mcp-rag:
+        condition: service_healthy
+
+  mcp-rag:
+    image: k33g/mcp-rag-server:0.0.1
+    # ports:
+    #   - 9095:6060
+    environment:
+      - MCP_HTTP_PORT=6060
+      - LIMIT=0.5
+      - MAX_RESULTS=5
+      - JSON_STORE_FILE_PATH=store/rag-memory-store.json
+      - DOCUMENTS_PATH=markdown
+      - CHUNK_SIZE=1024
+      - CHUNK_OVERLAP=256  
+    volumes:
+      - ./markdown:/app/markdown
+      - ./store/rag:/app/store
+    models:
+      mcp-rag-model:
+        endpoint_var: MODEL_RUNNER_BASE_URL
+        model_var: EMBEDDING_MODEL
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:6060/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 240s
+
 
   mcp-fancy-names:
     build:
@@ -147,6 +179,11 @@ configs:
             url: "http://mcp-dnd:6060/mcp"
             transport_type: http
 
+        mcp-rag:
+          remote:
+            url: "http://mcp-rag:6060/mcp"
+            transport_type: http
+
 
 models:
   snip-model:
@@ -173,3 +210,5 @@ models:
   embedding-model:
     model: ai/mxbai-embed-large:latest
 
+  mcp-rag-model:
+    model: ai/granite-embedding-multilingual:latest

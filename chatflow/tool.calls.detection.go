@@ -41,6 +41,7 @@ func detectAndExecuteToolCalls(
 
 	for !stopped {
 		fmt.Printf("\n🔄 Tool detection loop iteration - Current history length: %d\n", len(history))
+		
 		resp, err := genkit.Generate(ctx, g,
 			ai.WithModelName("openai/"+config.ToolsModel),
 			ai.WithMessages(history...),
