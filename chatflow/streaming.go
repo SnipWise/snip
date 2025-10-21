@@ -49,18 +49,19 @@ type OperationStatus struct {
 
 // StreamingChatFlowConfig holds configuration for the streaming chat flow
 type StreamingChatFlowConfig struct {
-	SnipModel          string
-	ToolsModel         string
+	SnipModel              string
+	SystemInstruction      string
+	ToolsModel             string
 	ToolsSystemInstruction string
-	MemoryRetriever    ai.Retriever
-	Messages           *[]*ai.Message
-	ActiveCompletions  *map[string]context.CancelFunc
-	CompletionsMutex   *sync.RWMutex
-	PendingOperations  *map[string]*OperationStatus
-	OperationsMutex    *sync.RWMutex
-	ContextSizeLimit   int
-	Tools              []ai.ToolRef
-	UpdateSimilarities UpdateSimilaritiesFunc
+	MemoryRetriever        ai.Retriever
+	Messages               *[]*ai.Message
+	ActiveCompletions      *map[string]context.CancelFunc
+	CompletionsMutex       *sync.RWMutex
+	PendingOperations      *map[string]*OperationStatus
+	OperationsMutex        *sync.RWMutex
+	ContextSizeLimit       int
+	Tools                  []ai.ToolRef
+	UpdateSimilarities     UpdateSimilaritiesFunc
 	//Genkit             *genkit.Genkit
 }
 
@@ -94,13 +95,16 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 				close(operation.Continue)
 			}()
 
+			// [NOTE] deactivate and use ai.WithSystem and ai.WithPrompt
+
 			// Initialize conversation history
-			history := []*ai.Message{}
-			history = append(history, ai.NewSystemTextMessage(config.ToolsSystemInstruction))
-			history = append(history, ai.NewUserTextMessage(input.Message))
+			// history := []*ai.Message{}
+
+			// history = append(history, ai.NewSystemTextMessage(config.ToolsSystemInstruction))
+			// history = append(history, ai.NewUserTextMessage(input.Message))
 
 			// Execute tool calls detection and execution
-			toolResult, err := detectAndExecuteToolCalls(ctx, g, config, history, operationID, operation, callback)
+			toolResult, err := detectAndExecuteToolCalls(ctx, g, config, input.Message, operationID, operation, callback)
 			if err != nil {
 				return nil, err
 			}
@@ -122,13 +126,16 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 
 			// [BEGIN] Similarity search
 			err = performSimilaritySearch(ctx, input.Message, config)
+			// [NOTE]: the function update directly the config.Messages
+			// [TODO]: instead, return the list of similarities and append them here
 			if err != nil {
 				log.Fatal(err)
 			}
 			// [END] Similarity search
 
 			// Update Conversational Memory
-			*config.Messages = append(*config.Messages, ai.NewUserTextMessage(input.Message))
+			// [NOTE] deactivate and use ai.WithSystem and ai.WithPrompt
+			//*config.Messages = append(*config.Messages, ai.NewUserTextMessage(input.Message))
 
 			// Debug: Print conversation state
 			for i, msg := range *config.Messages {
@@ -158,12 +165,15 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 			fmt.Println()
 
 			// [BEGIN] Stream Completion
+
 			fullResponse, err := genkit.Generate(completionCtx, g,
 				ai.WithModelName("openai/"+config.SnipModel),
+				ai.WithSystem(config.SystemInstruction),
 
 				ai.WithMessages(*config.Messages...),
-				//ai.WithConfig(map[string]any{"temperature": 0.7}),
+				//ai.WithConfig(map[string]any{"temperature": 0.7}), // [NOTE]: set into the compose file
 
+				ai.WithPrompt(input.Message),
 				ai.WithStreaming(func(ctx context.Context, chunk *ai.ModelResponseChunk) error {
 					// Do something with the chunk...
 					fmt.Print(chunk.Text())
@@ -185,7 +195,11 @@ func DefineStreamingChatFlow(g *genkit.Genkit, config StreamingChatFlowConfig) *
 
 			// Update Conversational Memory
 			// Add assistant response to conversation history
-			*config.Messages = append(*config.Messages, ai.NewTextMessage("assistant", fullResponse.Text()))
+			// [NOTE] deactivate and use ai.WithSystem and ai.WithPrompt
+			//*config.Messages = append(*config.Messages, ai.NewTextMessage("assistant", fullResponse.Text()))
+
+			*config.Messages = append(*config.Messages, ai.NewUserTextMessage(input.Message))
+			*config.Messages = append(*config.Messages, ai.NewModelTextMessage(fullResponse.Text()))
 
 			fmt.Println()
 			fmt.Println(strings.Repeat("=", 80))

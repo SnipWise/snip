@@ -72,7 +72,7 @@ services:
       - --transport=streaming
       - --verbose
       - --catalog=/mcp/catalog.yaml
-      - --servers=mcp-doc
+      - --servers=mcp-docs
       #- --servers=mcp-fancy-names,mcp-hello-world,mcp-dnd,mcp-doc
 
     configs:
@@ -88,11 +88,11 @@ services:
       #   condition: service_healthy
       # mcp-dnd:
       #   condition: service_healthy
-      mcp-doc:
+      mcp-docs:
         condition: service_healthy
 
-  mcp-doc:
-    image: k33g/mcp-doc-server:0.0.0
+  mcp-docs:
+    image: k33g/mcp-docs-server:0.0.1
     # ports:
     #   - 9095:6060
     environment:
@@ -181,9 +181,9 @@ configs:
         #     url: "http://mcp-dnd:6060/mcp"
         #     transport_type: http
 
-        mcp-doc:
+        mcp-docs:
           remote:
-            url: "http://mcp-doc:6060/mcp"
+            url: "http://mcp-docs:6060/mcp"
             transport_type: http
 
 
