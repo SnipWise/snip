@@ -24,7 +24,8 @@ func detectAndExecuteToolCalls(
 	ctx context.Context,
 	g *genkit.Genkit,
 	config StreamingChatFlowConfig,
-	history []*ai.Message,
+	userMessage string,
+	//history []*ai.Message,
 	operationID string,
 	operation *OperationStatus,
 	callback core.StreamCallback[string],
@@ -33,6 +34,8 @@ func detectAndExecuteToolCalls(
 	lastToolAssistantMessage := ""
 	totalOfToolsCalls := 0
 	toolCallsResults := ""
+
+	history := []*ai.Message{}
 
 	fmt.Println("🟩🟢 MCP 🛠️ Tools", len(config.Tools), "active tools.")
 	for _, t := range config.Tools {
@@ -49,7 +52,9 @@ func detectAndExecuteToolCalls(
 		
 		resp, err := genkit.Generate(ctx, g,
 			ai.WithModelName("openai/"+config.ToolsModel),
+			ai.WithSystem(config.ToolsSystemInstruction),
 			ai.WithMessages(history...),
+			ai.WithPrompt(userMessage),
 			ai.WithTools(config.Tools...),
 			ai.WithToolChoice(ai.ToolChoiceAuto),
 			ai.WithReturnToolRequests(true),

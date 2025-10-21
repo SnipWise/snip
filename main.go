@@ -118,7 +118,8 @@ func main() {
 	systemInstruction := helpers.GetEnvOrDefault("SYSTEM_INSTRUCTION", "You are a helpful AI assistant.")
 	toolsSystemInstruction := helpers.GetEnvOrDefault("TOOLS_SYSTEM_INSTRUCTION", "You are an AI assistant that can use tools to answer user queries. Use the provided tools when necessary to gather information or perform actions.")
 
-	messages = append(messages, ai.NewSystemTextMessage(systemInstruction))
+	// [NOTE] deactivate and use ai.WithSystem and ai.WithPrompt
+	//messages = append(messages, ai.NewSystemTextMessage(systemInstruction))
 
 	// Register tools once
 	toolsRefs := tools.Catalog(ctx, g, mcpClient)
@@ -126,6 +127,7 @@ func main() {
 	// Definition of a streaming flow
 	streamingChatFlow := chatflow.DefineStreamingChatFlow(g, chatflow.StreamingChatFlowConfig{
 		SnipModel:         snipModel,
+		SystemInstruction: systemInstruction,
 		ToolsModel:        toolsModel,
 		ToolsSystemInstruction: toolsSystemInstruction,
 		MemoryRetriever:   memoryRetriever,
@@ -187,8 +189,13 @@ func main() {
 	mux.HandleFunc("POST /memory/reset", func(w http.ResponseWriter, r *http.Request) {
 		if len(messages) > 0 {
 			// Keep only the first system message
-			systemMessage := messages[0]
-			messages = []*ai.Message{systemMessage}
+			// systemMessage := messages[0]
+			// messages = []*ai.Message{systemMessage}
+
+			// [NOTE] deactivate and use ai.WithSystem and ai.WithPrompt
+			messages = []*ai.Message{}
+
+
 		}
 
 		log.Println("Memory reset - kept only system message")
