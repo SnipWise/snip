@@ -1,18 +1,25 @@
-FROM --platform=$BUILDPLATFORM golang:1.25.2-alpine AS builder
-ARG TARGETOS
-ARG TARGETARCH
-WORKDIR /app
+# Build stage
+FROM golang:1.25.5-alpine AS builder
 
+WORKDIR /build
+
+# Copy from current directory (context is npc-agent-services)
 COPY . .
 
-RUN <<EOF
-go mod tidy 
-#go build
-GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build
-EOF
+# Download dependencies
+RUN go mod download
 
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -o pixies .
+
+# Runtime stage
 FROM alpine:latest
-RUN apk --no-cache add ca-certificates wget
+
 WORKDIR /app
-COPY --from=builder /app/snip .
-ENTRYPOINT ["./snip"]
+
+# Install ca-certificates for HTTPS requests
+RUN apk --no-cache add ca-certificates
+
+# Copy the binary from builder
+COPY --from=builder /build/pixies .
+CMD ["./pixies"]
