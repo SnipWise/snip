@@ -12,7 +12,6 @@ import (
 	"github.com/snipwise/nova/nova-sdk/ui/display"
 )
 
-
 func LoadSnippetData(dataPath, storePath, storeFile string, ragAgent *rag.Agent, metadataExtractorAgent *structured.Agent[KeywordMetadata]) error {
 	storePathFile := storePath + "/" + storeFile
 	// === LOAD OR CREATE STORE ===
@@ -132,89 +131,5 @@ func LoadSnippetData(dataPath, storePath, storeFile string, ragAgent *rag.Agent,
 		display.Infof("💾 RAG store saved to %s", storePathFile)
 
 	}
-	return nil
-}
-
-
-// AddToSnippetData loads an existing store and adds a single document to it
-func AddToSnippetData(dataFilePath, storePath, storeFile string, ragAgent *rag.Agent, metadataExtractorAgent *structured.Agent[KeywordMetadata]) error {
-	storePathFile := storePath + "/" + storeFile
-
-	// === LOAD EXISTING STORE ===
-	if !ragAgent.StoreFileExists(storePathFile) {
-		display.Errorf("❌ Store file does not exist: %s", storePathFile)
-		return fmt.Errorf("store file does not exist: %s", storePathFile)
-	}
-
-	err := ragAgent.LoadStore(storePathFile)
-	if err != nil {
-		display.Errorf("❌ Error loading store %s: %v", storePathFile, err)
-		return err
-	}
-	display.Infof("✅ RAG store loaded from %s", storePathFile)
-
-	// === READ DOCUMENT CONTENT ===
-	document, err := files.ReadTextFile(dataFilePath)
-	if err != nil {
-		display.Errorf("❌ Error reading document %s: %v", dataFilePath, err)
-		return err
-	}
-	display.Infof("📄 Document loaded: %s", dataFilePath)
-
-	// === CHUNK CONTENT ===
-	snippets := chunks.SplitMarkdownBySections(document)
-	display.Infof("📄 Split document into %d sections", len(snippets))
-
-	// === INDEX EACH SECTION ===
-	for idx, snippet := range snippets {
-		// === EXTRACT METADATA FOR snippet ===
-		extractionPrompt := fmt.Sprintf(`Analyze the following content and extract relevant metadata.
-Content:
-%s
-
-Extract:
-- Keywords: only 4 keywords, important terms and concepts from the markdown snippet title then from the content
-- Main topic: the primary subject (use the markdown snippet title)
-- Category: type of content
-`,
-			snippet,
-		)
-
-		metadata, _, err := metadataExtractorAgent.GenerateStructuredData([]messages.Message{
-			{Role: roles.User, Content: extractionPrompt},
-		})
-		if err != nil {
-			display.Errorf("❌ Error extracting keywords from snippet %d: %v", idx, err)
-			// Continue with embedding even if keyword extraction fails
-		} else {
-			display.Infof("🏷️  Keywords: %v", metadata.Keywords)
-			display.Infof("📌 Topic: %s | Category: %s",
-				metadata.MainTopic, metadata.Category)
-
-			// Enrich the chunk with metadata
-			enrichedSnippet := fmt.Sprintf("[METADATA]\nKeywords: %v\nTopic: %s\nCategory: %s\n\nContent:\n%s",
-				metadata.Keywords, metadata.MainTopic, metadata.Category, snippet,
-			)
-
-			snippet = enrichedSnippet
-		}
-
-		// === SAVE EMBEDDING FOR SECTION ===
-		err = ragAgent.SaveEmbedding(snippet)
-		if err != nil {
-			display.Errorf("❌ Error embedding snippet %d: %v", idx, err)
-		} else {
-			display.Infof("✅ Indexed snippet %d/%d", idx+1, len(snippets))
-		}
-	}
-
-	// === PERSIST UPDATED STORE TO DISK ===
-	err = ragAgent.PersistStore(storePathFile)
-	if err != nil {
-		display.Errorf("❌ Error persisting store: %v", err)
-		return err
-	}
-	display.Infof("💾 RAG store saved to %s", storePathFile)
-
 	return nil
 }

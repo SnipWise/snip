@@ -10,7 +10,7 @@ COPY . .
 RUN go mod download
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o pixies .
+RUN CGO_ENABLED=0 GOOS=linux go build -o snip .
 
 # Runtime stage
 FROM alpine:latest
@@ -21,5 +21,5 @@ WORKDIR /app
 RUN apk --no-cache add ca-certificates
 
 # Copy the binary from builder
-COPY --from=builder /build/pixies .
-CMD ["./pixies"]
+COPY --from=builder /build/snip .
+#CMD ["./snip"]

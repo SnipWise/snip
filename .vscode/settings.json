@@ -8,7 +8,7 @@
     "editor.detectIndentation": true,
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 1000,
-    "workbench.tree.indent": 20,
+    "workbench.tree.indent": 14,
     //"workbench.activityBar.location": "top",
     "workbench.editor.showTabs": "multiple",
     "window.zoomLevel": 0.0,
@@ -18,7 +18,7 @@
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.fontWeight": "normal",
         "editor.fontFamily": "'Droid Sans Mono', 'monospace', monospace",
-        "editor.fontSize": 20,
+        "editor.fontSize": 14,
         "editor.wordWrap": "on",
         "editor.quickSuggestions": {
             "comments": "off",

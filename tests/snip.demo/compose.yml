@@ -2,10 +2,11 @@ services:
   # docker compose up --build --no-log-prefix -d
 
   snip:
-    image: k33g/snip:0.0.6
+    image: k33g/snip:0.0.7
 
     ports:
     - 3500:8080
+    entrypoint: [./snip]
 
     environment:
       NOVA_LOG_LEVEL: INFO
@@ -25,8 +26,9 @@ services:
       SIMILARITY_LIMIT: 0.5
       MAX_SIMILARITIES: 3
 
-      STORE_FILE: golang.snippets.store.json
-
+      STORE_FILE: rust.snippets.store.json
+      ENABLE_STORE_WATCH: true
+      STORE_WATCH_INTERVAL: 5      
 
     volumes:
       #- ./data:/app/data:rw

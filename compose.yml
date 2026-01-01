@@ -1,5 +1,6 @@
 services:
   # docker compose up --build --no-log-prefix -d
+  # docker compose exec snip sh
 
   snip:
     build:
@@ -8,6 +9,11 @@ services:
 
     ports:
     - 3500:8080
+
+    # stdin_open: true # ← important
+    # tty: true # ← important
+
+    entrypoint: [./snip]
 
     environment:
       NOVA_LOG_LEVEL: INFO
@@ -28,6 +34,8 @@ services:
       MAX_SIMILARITIES: 7
 
       STORE_FILE: golang.snippets.store.json
+      ENABLE_STORE_WATCH: true
+      STORE_WATCH_INTERVAL: 5
 
     volumes:
       - ./data:/app/data:rw
