@@ -22,14 +22,14 @@ services:
       CODER_TOP_P: 0.9
 
       CONTEXT_SIZE_LIMIT: 32000
-      SIMILARITY_LIMIT: 0.4
-      MAX_SIMILARITIES: 7
+      SIMILARITY_LIMIT: 0.5
+      MAX_SIMILARITIES: 3
 
       STORE_FILE: golang.snippets.store.json
 
 
     volumes:
-      - ./data:/app/data:rw
+      #- ./data:/app/data:rw
       - ./directives:/app/directives:rw
       - ./store:/app/store:rw
 
