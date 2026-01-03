@@ -1,6 +1,7 @@
 services:
   # docker compose up --build --no-log-prefix -d
-
+  # docker compose exec snip sh
+  
   snip:
     image: k33g/snip:0.0.7
 

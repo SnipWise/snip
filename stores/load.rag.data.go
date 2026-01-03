@@ -24,7 +24,9 @@ func LoadSnippetData(dataPath, storePath, storeFile string, ragAgent *rag.Agent,
 		}
 		display.Infof("✅ RAG store loaded from %s", storePathFile)
 	} else {
-		embeddingDimension := ragAgent.GetEmbeddingDimension()
+		//embeddingDimension := ragAgent.GetEmbeddingDimension()
+		chunkSize := 512 // <> Embedding model dimension limit, <> not tokens
+		chunkOverlap := 128
 
 		display.Infof("📝 Store not found. Creating new store and indexing character sheet...")
 
@@ -80,17 +82,15 @@ func LoadSnippetData(dataPath, storePath, storeFile string, ragAgent *rag.Agent,
 					//snippet = enrichedSnippet
 				}
 
-				if len(enrichedSnippet) > embeddingDimension {
-					display.Infof("⚠️  Snippet %d length (%d) exceeds embedding dimension (%d). Consider chunking further.",
-						idx, len(enrichedSnippet), embeddingDimension)
-
-					// NBCHUNK = LENSNIPP / (SIZEONECHUNK + 128 - LENMETA)
-					// SIZEONECHUNK = LENSNIPP / NBCHUNK + LENMETA - 128
-
-					sizePerChunk := embeddingDimension - len(metaDataContent) - 128
-
-					newChunks := chunks.ChunkText(snippet, sizePerChunk, 128)
-
+				err = ragAgent.SaveEmbedding(enrichedSnippet)
+				if err != nil {
+					display.Errorf("❌ Error embedding snippet %d: %v", idx, err)
+					display.Infof("⚠️ Re Chunk Snippet content: %s", snippet)
+					newSize := len(snippet) / 2
+					if newSize < chunkSize {
+						newSize = chunkSize
+					}
+					newChunks := chunks.ChunkText(snippet, newSize, chunkOverlap)
 					// Index each new chunk
 					for cidx, chunk := range newChunks {
 						chunkWithMeta := fmt.Sprintf("%s\n\nContent Chunk:\n%s",
@@ -106,17 +106,11 @@ func LoadSnippetData(dataPath, storePath, storeFile string, ragAgent *rag.Agent,
 					}
 
 				} else {
-					// Proceed with original enriched snippet
-					// === SAVE EMBEDDING FOR SECTION ===
-					err = ragAgent.SaveEmbedding(enrichedSnippet)
-					if err != nil {
-						display.Errorf("❌ Error embedding snippet %d: %v", idx, err)
-					} else {
-						display.Infof("✅ Indexed snippet %d/%d", idx+1, len(snippets))
+					display.Infof("✅ Indexed snippet %d/%d", idx+1, len(snippets))
 
-						//fmt.Println(snippet)
-					}
+					//fmt.Println(snippet)
 				}
+
 
 			} // END: Index each section (each snippet)
 

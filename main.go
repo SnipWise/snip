@@ -9,11 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
-
 	"github.com/snipwise/nova/nova-sdk/agents"
+	"github.com/snipwise/nova/nova-sdk/agents/chat"
+	"github.com/snipwise/nova/nova-sdk/agents/compressor"
+	"github.com/snipwise/nova/nova-sdk/agents/crew"
+	"github.com/snipwise/nova/nova-sdk/agents/crewserver"
 	"github.com/snipwise/nova/nova-sdk/agents/rag"
-	"github.com/snipwise/nova/nova-sdk/agents/server"
 	"github.com/snipwise/nova/nova-sdk/agents/structured"
 	"github.com/snipwise/nova/nova-sdk/models"
 	"github.com/snipwise/nova/nova-sdk/toolbox/env"
@@ -62,57 +63,35 @@ func watchStoreFile(storePathFile, dataPath, storePath, storeFile string, ragAge
 	}
 }
 
-// initializeServerAgent initializes and configures the server agent with all dependencies
-func initializeServerAgent() (*server.ServerAgent, error) {
+func initializeSideKickAgents(ctx context.Context, engineURL, dataPath, storePath, storeFile string) (*rag.Agent, *structured.Agent[KeywordMetadata], *compressor.Agent, error) {
 	// Create logger from environment variable
 	log := logger.GetLoggerFromEnv()
 
-	envFile := ".env"
-	// Load environment variables from env file (optional in Docker)
-	if err := godotenv.Load(envFile); err != nil {
-		log.Info("Note: .env file not found (using Docker environment variables)\n")
-	}
-
-	ctx := context.Background()
-
-	storePath := env.GetEnvOrDefault("STORE_PATH", "./store")
-	storeFile := env.GetEnvOrDefault("STORE_FILE", "golang.snippets.store.json")
-	dataPath := env.GetEnvOrDefault("DATA_PATH", "./data")
-
-	httpPort := env.GetEnvOrDefault("HTTP_PORT", "3500")
-
-	engineURL := env.GetEnvOrDefault("ENGINE_URL", "http://localhost:12434/engines/llama.cpp/v1")
 	ragModelId := env.GetEnvOrDefault("RAG_EMBEDDING_MODEL_ID", "ai/embeddinggemma:latest")
 	metadataModelId := env.GetEnvOrDefault("METADATA_MODEL_ID", "hf.co/menlo/jan-nano-gguf:q4_k_m")
 
 	ragAgent, err := CreateRagAgent(ctx, engineURL, ragModelId)
-	if err != nil {
-		return nil, err
-	}
 
 	metadataExtractorAgent, err := CreateMetadataExtractorAgent(ctx, engineURL, metadataModelId)
-	if err != nil {
-		return nil, err
-	}
-
-	err = LoadSnippetData(dataPath, storePath, storeFile, ragAgent, metadataExtractorAgent)
-	if err != nil {
-		return nil, err
-	}
-
-	// Start watching the store file for changes in a goroutine if enabled
-	enableStoreWatch := env.GetEnvBoolOrDefault("ENABLE_STORE_WATCH", true)
-	if enableStoreWatch {
-		storePathFile := filepath.Join(storePath, storeFile)
-		storeWatchInterval := env.GetEnvIntOrDefault("STORE_WATCH_INTERVAL", 5)
-		go watchStoreFile(storePathFile, dataPath, storePath, storeFile, ragAgent, metadataExtractorAgent, storeWatchInterval)
-	}
 
 	compressorAgent, err := CreateCompressorAgent(ctx, engineURL)
-	if err != nil {
-		return nil, err
-	}
 
+	if err != nil {
+		log.Error("❌ Error creating sidekick agents: %v", err)
+		//display.Errorf("❌ Error creating sidekick agents: %v", err)
+		return nil, nil, nil, err
+	}
+	err = LoadSnippetData(dataPath, storePath, storeFile, ragAgent, metadataExtractorAgent)
+	if err != nil {
+		log.Error("❌ Error loading snippet data: %v", err)
+		//display.Errorf("❌ Error loading snippet data: %v", err)
+		return nil, nil, nil, err
+	}
+	return ragAgent, metadataExtractorAgent, compressorAgent, nil
+
+}
+
+func initializeCoderChatAgent(ctx context.Context, engineURL string) (*chat.Agent, error) {
 	// ------------------------------------------------
 	// Create the server agent
 	// ------------------------------------------------
@@ -124,11 +103,10 @@ func initializeServerAgent() (*server.ServerAgent, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	serverAgent, err := server.NewAgent(
+	coderChatAgent, err := chat.NewAgent(
 		ctx,
 		agents.Config{
-			Name:                    "coder",
+			Name:                    "coder-chat",
 			EngineURL:               engineURL,
 			SystemInstructions:      coderAgentSystemInstructionsContent,
 			KeepConversationHistory: true,
@@ -138,41 +116,154 @@ func initializeServerAgent() (*server.ServerAgent, error) {
 			Temperature: models.Float64(temperature),
 			TopP:        models.Float64(topP),
 		},
-		":"+httpPort,
 	)
+	if err != nil {
+		display.Errorf("❌ Error creating coder chat agent: %v", err)
+		return nil, err
+	}
+	display.Infof("🚀 Coder chat agent created")
+
+	return coderChatAgent, nil
+}
+
+type Configuration struct {
+	EngineURL          string
+	StorePath          string
+	StoreFile          string
+	DataPath           string
+	HTTPPort           int
+	EnableStoreWatch   bool
+	StoreWatchInterval int
+	SimilarityLimit    float64
+	MaxSimilarities    int
+	ContextSizeLimit   int
+}
+
+func loadConfiguration() Configuration {
+	return Configuration{
+		EngineURL:          env.GetEnvOrDefault("ENGINE_URL", "http://localhost:12434/engines/llama.cpp/v1"),
+		StorePath:          env.GetEnvOrDefault("STORE_PATH", "./store"),
+		StoreFile:          env.GetEnvOrDefault("STORE_FILE", "golang.snippets.store.json"),
+		DataPath:           env.GetEnvOrDefault("DATA_PATH", "./data"),
+		HTTPPort:           env.GetEnvIntOrDefault("HTTP_PORT", 3500),
+		EnableStoreWatch:   env.GetEnvBoolOrDefault("ENABLE_STORE_WATCH", true),
+		StoreWatchInterval: env.GetEnvIntOrDefault("STORE_WATCH_INTERVAL", 5),
+		SimilarityLimit:    env.GetEnvFloatOrDefault("SIMILARITY_LIMIT", 0.4),
+		MaxSimilarities:    env.GetEnvIntOrDefault("MAX_SIMILARITIES", 7),
+		ContextSizeLimit:   env.GetEnvIntOrDefault("CONTEXT_SIZE_LIMIT", 32000),
+	}
+}
+
+// initializeServerAgent initializes and configures the server agent with all dependencies
+func initializeServerAgent() (*crewserver.CrewServerAgent, error) {
+	// Create logger from environment variable
+	log := logger.GetLoggerFromEnv()
+	config := loadConfiguration()
+
+	ctx := context.Background()
+
+	httpPort := config.HTTPPort
+	engineURL := config.EngineURL
+
+	storePath := config.StorePath
+	storeFile := config.StoreFile
+	dataPath := config.DataPath
+
+	ragAgent, metadataExtractorAgent, compressorAgent, err := initializeSideKickAgents(ctx, engineURL, dataPath, storePath, storeFile)
+	if err != nil {
+		log.Error("❌ Error creating sidekick agents: %v", err)
+		return nil, err
+	}
+
+	coderAgent, err := initializeCoderChatAgent(ctx, engineURL)
+	if err != nil {
+		log.Error("❌ Error creating coder chat agent: %v", err)
+		return nil, err
+	}
+
+	// Start watching the store file for changes in a goroutine if enabled
+	enableStoreWatch := config.EnableStoreWatch
+	if enableStoreWatch {
+		storePathFile := filepath.Join(storePath, storeFile)
+		storeWatchInterval := config.StoreWatchInterval
+		go watchStoreFile(storePathFile, dataPath, storePath, storeFile, ragAgent, metadataExtractorAgent, storeWatchInterval)
+	}
+
+	similarityLimit := config.SimilarityLimit
+	maxSimilarities := config.MaxSimilarities
+	contextSizeLimit := config.ContextSizeLimit
+
+	serverAgent, err := crewserver.NewAgent(
+		ctx,
+		crewserver.WithSingleAgent(coderAgent),
+		crewserver.WithPort(httpPort),
+		crewserver.WithRagAgentAndSimilarityConfig(ragAgent, similarityLimit, maxSimilarities),
+		crewserver.WithCompressorAgentAndContextSize(compressorAgent, contextSizeLimit),
+	)
+
 	if err != nil {
 		display.Errorf("❌ Error creating server agent: %v", err)
 		return nil, err
 	}
 	display.Infof("🚀 SNIP server agent created and listening on port %s", serverAgent.GetPort())
 
-	contextSizeLimit := env.GetEnvIntOrDefault("CONTEXT_SIZE_LIMIT", 32000)
-
-	serverAgent.SetCompressorAgent(compressorAgent)
-	serverAgent.SetContextSizeLimit(contextSizeLimit)
-
-	serverAgent.SetRagAgent(ragAgent)
-
-	similarityLimit := env.GetEnvFloatOrDefault("SIMILARITY_LIMIT", 0.4)
-	maxSimilarities := env.GetEnvIntOrDefault("MAX_SIMILARITIES", 7)
-
-	serverAgent.SetSimilarityLimit(similarityLimit)
-	serverAgent.SetMaxSimilarities(maxSimilarities)
-
 	return serverAgent, nil
 }
 
 func chatWithAgent() {
-	chatAgent, err := initializeServerAgent()
+	// Create logger from environment variable
+	log := logger.GetLoggerFromEnv()
+	config := loadConfiguration()
+
+	ctx := context.Background()
+
+	//httpPort := config.HTTPPort
+	engineURL := config.EngineURL
+
+	storePath := config.StorePath
+	storeFile := config.StoreFile
+	dataPath := config.DataPath
+
+	ragAgent, metadataExtractorAgent, compressorAgent, err := initializeSideKickAgents(ctx, engineURL, dataPath, storePath, storeFile)
 	if err != nil {
+		log.Error("❌ Error creating sidekick agents: %v", err)
 		return
 	}
+
+	coderAgent, err := initializeCoderChatAgent(ctx, engineURL)
+	if err != nil {
+		log.Error("❌ Error creating coder chat agent: %v", err)
+		return
+	}
+	// Start watching the store file for changes in a goroutine if enabled
+	enableStoreWatch := config.EnableStoreWatch
+	if enableStoreWatch {
+		storePathFile := filepath.Join(storePath, storeFile)
+		storeWatchInterval := config.StoreWatchInterval
+		go watchStoreFile(storePathFile, dataPath, storePath, storeFile, ragAgent, metadataExtractorAgent, storeWatchInterval)
+	}
+
+	similarityLimit := config.SimilarityLimit
+	maxSimilarities := config.MaxSimilarities
+	contextSizeLimit := config.ContextSizeLimit
+
+	crewAgent, err := crew.NewAgent(
+		ctx,
+		crew.WithSingleAgent(coderAgent),
+		crew.WithRagAgentAndSimilarityConfig(ragAgent, similarityLimit, maxSimilarities),
+		crew.WithCompressorAgentAndContextSize(compressorAgent, contextSizeLimit),
+	)
+	if err != nil {
+		display.Errorf("❌ Error creating crew agent: %v", err)
+		return
+	}
+	display.Infof("🤖 SNIP crew agent created for chat")
 
 	for {
 
 		markdownParser := display.NewMarkdownChunkParser()
 
-		input := prompt.NewWithColor("🤖 Ask me something? [" + chatAgent.GetName() + "]")
+		input := prompt.NewWithColor("🤖 Ask me something? [" + crewAgent.GetName() + "]")
 		question, err := input.RunWithEdit()
 
 		if err != nil {
@@ -186,7 +277,7 @@ func chatWithAgent() {
 
 		if strings.HasPrefix(question, "/messages") {
 			display.Infof("💬 Current conversation messages:")
-			for i, msg := range chatAgent.GetMessages() {
+			for i, msg := range crewAgent.GetMessages() {
 				display.Infof("Message %d - Role: %s, Content: \n%s", i, msg.Role, msg.Content)
 				display.Separator()
 			}
@@ -194,14 +285,14 @@ func chatWithAgent() {
 		}
 
 		if strings.HasPrefix(question, "/reset") {
-			display.Infof("🔄 Resetting %s context", chatAgent.GetName())
-			chatAgent.ResetMessages()
+			display.Infof("🔄 Resetting %s context", crewAgent.GetName())
+			crewAgent.ResetMessages()
 			continue
 		}
 
 		display.NewLine()
 
-		result, err := chatAgent.StreamCompletion(question,
+		result, err := crewAgent.StreamCompletion(question,
 			func(chunk string, finishReason string) error {
 
 				// Use markdown chunk parser for colorized streaming output
@@ -218,14 +309,14 @@ func chatWithAgent() {
 			})
 
 		if err != nil {
-			display.Errorf("[%s][%v]failed to get completion: %v", chatAgent.GetName(), chatAgent.GetContextSize(), err)
+			display.Errorf("[%s][%v]failed to get completion: %v", crewAgent.GetName(), crewAgent.GetContextSize(), err)
 			return
 		}
 
 		display.NewLine()
 		display.Separator()
 		display.KeyValue("Finish reason", result.FinishReason)
-		display.KeyValue("Context size", fmt.Sprintf("%d characters", chatAgent.GetContextSize()))
+		display.KeyValue("Context size", fmt.Sprintf("%d characters", crewAgent.GetContextSize()))
 		display.Separator()
 	}
 }
