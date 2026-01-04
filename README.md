@@ -2,7 +2,7 @@
 **S.N.I.P.**: Smart Neural Intelligence Partner
 
 ```bash
-docker pull k33g/snip:0.0.8
+docker pull k33g/snip:0.0.9
 ```
 
 The Vectore Store is populated at the first startup from the snippets in the `data` folder. 

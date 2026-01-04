@@ -3,7 +3,7 @@ services:
   # docker compose exec snip sh
   
   snip:
-    image: k33g/snip:0.0.8
+    image: k33g/snip:0.0.9
 
     ports:
     - 3500:8080
