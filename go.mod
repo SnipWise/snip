@@ -2,10 +2,7 @@ module snip
 
 go 1.25.4
 
-require (
-	github.com/joho/godotenv v1.5.1
-	github.com/snipwise/nova v1.2.3
-)
+require github.com/snipwise/nova v1.2.4
 
 require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
