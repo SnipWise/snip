@@ -30,6 +30,8 @@ github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZV
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/snipwise/nova v1.2.3 h1:0uHmy7WdYJGm4liOLQwUCjWZo6dY28DyaNhgZo1Ve/w=
 github.com/snipwise/nova v1.2.3/go.mod h1:LIfXjRbcYnNZRTQefxGx9OJLulq9KAVsWs/dUjDEtoo=
+github.com/snipwise/nova v1.2.4 h1:vXr8z/TDZUunbDkHSWVATaTgW8djCn2bx1srHjeFfO4=
+github.com/snipwise/nova v1.2.4/go.mod h1:LIfXjRbcYnNZRTQefxGx9OJLulq9KAVsWs/dUjDEtoo=
 github.com/spf13/cast v1.10.0 h1:h2x0u2shc1QuLHfxi+cTJvs30+ZAHOGRic8uyGTDWxY=
 github.com/spf13/cast v1.10.0/go.mod h1:jNfB8QC9IA6ZuY2ZjDp0KtFO2LZZlg4S/7bzP6qqeHo=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=

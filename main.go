@@ -103,6 +103,11 @@ func initializeCoderChatAgent(ctx context.Context, engineURL string) (*chat.Agen
 	if err != nil {
 		return nil, err
 	}
+
+	userMessagePreDirectives := env.GetEnvOrDefault("USER_MESSAGE_PRE_DIRECTIVES", "")
+	userMessagePostDirectives := env.GetEnvOrDefault("USER_MESSAGE_POST_DIRECTIVES", "")
+
+
 	coderChatAgent, err := chat.NewAgent(
 		ctx,
 		agents.Config{
@@ -121,6 +126,15 @@ func initializeCoderChatAgent(ctx context.Context, engineURL string) (*chat.Agen
 		display.Errorf("❌ Error creating coder chat agent: %v", err)
 		return nil, err
 	}
+	if userMessagePreDirectives != "" {
+		coderChatAgent.SetUserMessagePreDirectives(userMessagePreDirectives)
+		display.Infof("📘 Set user message pre directives: %s", userMessagePreDirectives)
+	}
+	if userMessagePostDirectives != "" {
+		coderChatAgent.SetUserMessagePostDirectives(userMessagePostDirectives)
+		display.Infof("📙 Set user message post directives: %s", userMessagePostDirectives)
+	}
+
 	display.Infof("🚀 Coder chat agent created")
 
 	return coderChatAgent, nil

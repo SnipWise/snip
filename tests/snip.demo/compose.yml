@@ -23,6 +23,10 @@ services:
       CODER_TEMPERATURE: 0.8
       CODER_TOP_P: 0.9
 
+      # user message pre directives
+      USER_MESSAGE_PRE_DIRECTIVES: ""
+      USER_MESSAGE_POST_DIRECTIVES: ""
+
       CONTEXT_SIZE_LIMIT: 32000
       SIMILARITY_LIMIT: 0.5
       MAX_SIMILARITIES: 3
