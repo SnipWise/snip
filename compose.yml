@@ -37,7 +37,8 @@ services:
       SIMILARITY_LIMIT: 0.4
       MAX_SIMILARITIES: 7
 
-      STORE_FILE: golang.snippets.store.json
+      #STORE_FILE: golang.snippets.store.json
+      STORE_FILE: nova.snippets.store.json
       ENABLE_STORE_WATCH: true
       STORE_WATCH_INTERVAL: 5
 
