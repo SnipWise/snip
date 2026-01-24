@@ -17,6 +17,10 @@ FROM alpine:latest
 
 WORKDIR /app
 
+# Copy web directory for static files
+COPY --from=builder /build/web ./web
+
+
 # Install ca-certificates for HTTPS requests
 RUN apk --no-cache add ca-certificates
 
