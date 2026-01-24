@@ -8,7 +8,8 @@ services:
       dockerfile: Dockerfile
 
     ports:
-    - 3500:8080
+    - 8080:8080
+    - 8085:8085 # SPA web UI port
 
     # stdin_open: true # ← important
     # tty: true # ← important
@@ -21,7 +22,10 @@ services:
       STORE_PATH: ./store
       DATA_PATH: ./data
 
-      HTTP_PORT: 8080
+      HTTP_PORT: 8080 
+      SPA_HTTP_PORT: 8085
+
+      SNIP_TITLE: 🤖 Custom AI Agent
 
       CODER_DIRECTIVES_PATH_FILE: ./directives/coder.agent.system.instructions.md
       #CODER_DIRECTIVES_PATH_FILE: ./directives/thinker.agent.system.instructions.md

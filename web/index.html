@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Crew Server - Chat Interface</title>
+
+    <!-- Theme Stylesheets (dynamically loaded) -->
+    <link id="highlight-theme" rel="stylesheet" href="lib/github-dark.min.css">
+    <link id="app-theme" rel="stylesheet" href="css/styles.css?v=19">
+
+
+</head>
+<body>
+    <div id="app"></div>
+
+    <!-- Configuration (optional - load before api.js) -->
+    <script src="config.js?v=19"></script>
+    <script>
+        // Update page title from config
+        if (window.SNIP_TITLE) {
+            document.title = window.SNIP_TITLE;
+        }
+    </script>
+
+    <!-- Dependencies (Local) -->
+    <script src="lib/vue.global.prod.js"></script>
+    <script src="lib/marked.min.js"></script>
+    <script src="lib/highlight.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/api.js?v=19"></script>
+    <script src="js/markdown.js?v=18"></script>
+    <script src="js/components/ChatMessage.js?v=18"></script>
+    <script src="js/components/OperationControls.js?v=18"></script>
+    <script src="js/components/StatusBar.js?v=18"></script>
+    <script src="js/components/InputBar.js?v=18"></script>
+    <script src="js/components/Modal.js?v=18"></script>
+    <script src="js/theme.js?v=18"></script>
+    <script src="js/app.js?v=18"></script>
+</body>
+</html>
